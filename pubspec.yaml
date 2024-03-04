@@ -1,0 +1,11 @@
+name: rfwt
+description: rfw(remote flutter widget) tools
+version: 0.0.1
+homepage: https://github.com/ebwood/rfwt
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+dev_dependencies:
+  melos: ^4.1.0
+dependencies:
+  rfw: ^1.0.24

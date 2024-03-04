@@ -1,0 +1,8 @@
+name: rfwt
+
+packages:
+  - packages/*
+
+scripts:
+  analyze:
+    exec: dart analyze .
