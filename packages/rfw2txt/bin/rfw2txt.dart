@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:args/args.dart';
+import 'package:path/path.dart';
+import 'package:rfw/formats.dart';
 
 const String version = '0.0.1';
 
@@ -20,11 +24,12 @@ ArgParser buildParser() {
       'version',
       negatable: false,
       help: 'Print the tool version.',
-    );
+    )
+    ..addOption('output', abbr: 'o', help: 'Output path.');
 }
 
 void printUsage(ArgParser argParser) {
-  print('Usage: dart rfw2txt.dart <flags> [arguments]');
+  print('Usage: rfw2txt <flags> [arguments]');
   print(argParser.usage);
 }
 
@@ -48,10 +53,35 @@ void main(List<String> arguments) {
     }
 
     // Act on the arguments provided.
-    print('Positional arguments: ${results.rest}');
     if (verbose) {
       print('[VERBOSE] All arguments: ${results.arguments}');
     }
+
+    String outputPath = '';
+    if (results.wasParsed('output')) {
+      outputPath = results['output'] as String;
+    }
+
+    if (results.arguments.isEmpty) {
+      print('No rfw path provided.');
+      printUsage(argParser);
+      return;
+    }
+    
+    // check if file exists
+    String rfwPath = results.arguments[0];
+    File rfwFile = File(rfwPath);
+    if (!rfwFile.existsSync()) {
+      print('File not found: $rfwPath');
+      return;
+    }
+
+    if (outputPath.isEmpty) {
+      outputPath = '${basenameWithoutExtension(rfwPath)}.rfwtxt';
+    }
+    File outputFile = File(outputPath);
+    outputFile.writeAsStringSync(
+        decodeLibraryBlob(rfwFile.readAsBytesSync()).toString());
   } on FormatException catch (e) {
     // Print usage information if an invalid argument was provided.
     print(e.message);
