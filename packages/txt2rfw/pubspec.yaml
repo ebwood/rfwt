@@ -12,6 +12,7 @@ executables:
 # Add regular dependencies here.
 dependencies:
   args: ^2.4.2
+  collection: ^1.18.0
   path: ^1.9.0
   rfw: ^1.0.24
   yaml: ^3.1.2

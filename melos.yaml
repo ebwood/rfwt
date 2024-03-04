@@ -1,8 +1,10 @@
 name: rfwt
 
 packages:
-  - packages/*
+  - packages/txt2rfw
 
 scripts:
   analyze:
-    exec: dart analyze .
+    exec: dart analyze
+  test:
+    exec: dart test

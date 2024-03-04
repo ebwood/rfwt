@@ -1,3 +1,4 @@
+@TestOn('vm')
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,8 +7,8 @@ import 'package:collection/collection.dart';
 
 void main() {
   test('txt2rfw without output path', () async {
-    Process process =
-        await Process.start('dart', ['run', 'bin/txt2rfw.dart', "test/test.rfwtxt"]);
+    Process process = await Process.start(
+        'dart', ['run', 'bin/txt2rfw.dart', "test/test.rfwtxt"]);
     await process.stdout.transform(utf8.decoder).forEach(print);
     await process.stderr.transform(utf8.decoder).forEach(print);
     File resultFile = File('test/match.rfw');
@@ -22,8 +23,8 @@ void main() {
   });
 
   test('txt2rfw with output path', () async {
-    Process process =
-        await Process.start('dart', ['run', 'bin/txt2rfw.dart', "test/test.rfwtxt", "-o", "test.rfw"]);
+    Process process = await Process.start('dart',
+        ['run', 'bin/txt2rfw.dart', "test/test.rfwtxt", "-o", "test.rfw"]);
     await process.stdout.transform(utf8.decoder).forEach(print);
     await process.stderr.transform(utf8.decoder).forEach(print);
     File resultFile = File('test/match.rfw');
