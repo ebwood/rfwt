@@ -13,8 +13,6 @@ executables:
 dependencies:
   args: ^2.4.2
   collection: ^1.18.0
-  flutter:
-    sdk: flutter
   path: ^1.9.0
   rfw: ^1.0.24
   yaml: ^3.1.2
@@ -22,3 +20,6 @@ dependencies:
 dev_dependencies:
   lints: ^3.0.0
   test: ^1.24.0
+
+dependency_override:
+  rfw: ^1.0.24
