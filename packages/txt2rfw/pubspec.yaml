@@ -14,6 +14,7 @@ dependencies:
   args: ^2.4.2
   path: ^1.9.0
   rfw: ^1.0.24
+  yaml: ^3.1.2
 
 dev_dependencies:
   lints: ^3.0.0
