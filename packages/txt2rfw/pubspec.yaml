@@ -13,6 +13,8 @@ executables:
 dependencies:
   args: ^2.4.2
   collection: ^1.18.0
+  flutter:
+    sdk: flutter
   path: ^1.9.0
   rfw: ^1.0.24
   yaml: ^3.1.2
