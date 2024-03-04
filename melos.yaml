@@ -4,6 +4,8 @@ packages:
   - packages/txt2rfw
 
 scripts:
+  get:
+    exec: dart pub get
   analyze:
     exec: dart analyze
   test:
