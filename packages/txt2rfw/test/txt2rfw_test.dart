@@ -11,12 +11,12 @@ void main() {
         'dart', ['run', 'bin/txt2rfw.dart', "test/test.rfwtxt"]);
     await process.stdout.transform(utf8.decoder).forEach(print);
     await process.stderr.transform(utf8.decoder).forEach(print);
-    File resultFile = File('test/match.rfw');
+    File matchFile = File('test/match.rfw');
     File outputFile = File('test.rfw');
     expect(outputFile.existsSync(), true);
     expect(
         ListEquality()
-            .equals(resultFile.readAsBytesSync(), resultFile.readAsBytesSync()),
+            .equals(matchFile.readAsBytesSync(), matchFile.readAsBytesSync()),
         true);
 
     outputFile.delete();
@@ -27,12 +27,12 @@ void main() {
         ['run', 'bin/txt2rfw.dart', "test/test.rfwtxt", "-o", "test.rfw"]);
     await process.stdout.transform(utf8.decoder).forEach(print);
     await process.stderr.transform(utf8.decoder).forEach(print);
-    File resultFile = File('test/match.rfw');
+    File matchFile = File('test/match.rfw');
     File outputFile = File('test.rfw');
     expect(outputFile.existsSync(), true);
     expect(
         ListEquality()
-            .equals(resultFile.readAsBytesSync(), resultFile.readAsBytesSync()),
+            .equals(matchFile.readAsBytesSync(), matchFile.readAsBytesSync()),
         true);
 
     outputFile.delete();
