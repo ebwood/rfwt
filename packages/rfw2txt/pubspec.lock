@@ -233,10 +233,9 @@ packages:
   rfw:
     dependency: "direct main"
     description:
-      name: rfw
-      sha256: ae96afb1c345f53239c5ab3222cff94896df511ca4a53b2fcec5c64678cbb2ff
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../../rfw-1.0.24"
+      relative: true
+    source: path
     version: "1.0.24"
   shelf:
     dependency: transitive
