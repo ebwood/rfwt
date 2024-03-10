@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:path/path.dart';
-import 'package:rfw/formats.dart';
+import 'package:txt2rfw/txt2rfw.dart';
 
 const String version = '0.0.1';
 
@@ -81,8 +81,7 @@ void main(List<String> arguments) {
     }
     File outputFile = File(outputPath);
 
-    outputFile.writeAsBytesSync(
-        encodeLibraryBlob(parseLibraryFile(txtFile.readAsStringSync())));
+    outputFile.writeAsBytesSync(txt2rfw(txtFile.readAsStringSync()));
   } on FormatException catch (e) {
     // Print usage information if an invalid argument was provided.
     print(e.message);
