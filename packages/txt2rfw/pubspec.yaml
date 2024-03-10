@@ -5,8 +5,8 @@ version: 0.0.7
 repository: https://github.com/ebwood/rfwt
 
 environment:
-  sdk: ">=2.17.0 "
-  flutter: '>=3.2.0'
+  sdk: ">=3.2.0 "
+  flutter: '>=3.16.0'
 
 executables: 
   txt2rfw:
