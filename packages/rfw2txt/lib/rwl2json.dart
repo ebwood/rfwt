@@ -1,9 +1,11 @@
 import 'package:rfw/formats.dart';
 
+// Parse RemoteWidgetLibrary to json
 Map<String, dynamic> rwl2json(RemoteWidgetLibrary library) {
   return JsonVisitor().visit(library);
 }
 
+// RemoteWidgetLibrary to json visitor
 class JsonVisitor {
   Map<String, dynamic> visit(RemoteWidgetLibrary library) {
     return {
@@ -58,9 +60,8 @@ class JsonVisitor {
     return {
       'type': '${sw.runtimeType}',
       'input': _visitObject(sw.input),
-      'outputs': sw.outputs.map((key, value) => MapEntry(
-          key == null ? 'default' : '$key',
-          _visitObject(value))),
+      'outputs': sw.outputs.map((key, value) =>
+          MapEntry(key == null ? 'default' : '$key', _visitObject(value))),
     };
   }
 

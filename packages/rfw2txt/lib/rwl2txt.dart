@@ -1,10 +1,11 @@
 import 'package:rfw/formats.dart';
 
-// Parse rwl to .rfwtxt
+// Parse RemoteWidgetLibrary to .rfwtxt
 String rwl2txt(RemoteWidgetLibrary library) {
   return TxtVisitor().visit(library);
 }
 
+// RemoteWidgetLibrary to .rfwtxt format visitor
 class TxtVisitor {
   String visit(RemoteWidgetLibrary library) {
     StringBuffer buffer = StringBuffer();
