@@ -1,3 +1,7 @@
+## 0.0.5
+
+ - Bump "rfw2txt" to `0.0.5`.
+
 ## 0.0.4
 
  - Bump "rfw2txt" to `0.0.4`.
