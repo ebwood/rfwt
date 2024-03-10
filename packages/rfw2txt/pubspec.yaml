@@ -1,7 +1,8 @@
 name: rfw2txt
-description: convert .rfw to .rfwtxt
+description: >
+  Parse RemoteFlutterWidget .rfw format to .rfwtxt format.
 version: 0.0.2
-repository: https://github.com/ebwood/rfwt/packages/rfw2txt
+repository: https://github.com/ebwood/rfwt/tree/main/packages/rfw2txt
 
 environment:
   sdk: ^3.3.0
