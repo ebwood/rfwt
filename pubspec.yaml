@@ -1,7 +1,7 @@
 name: rfwt
 description: rfw(remote flutter widget) tools
-version: 0.0.2
 homepage: https://github.com/ebwood/rfwt
+publish_to: none
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
