@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/packages/txt2rfw/melos_txt2rfw.iml" filepath="$PROJECT_DIR$/packages/txt2rfw/melos_txt2rfw.iml" />
       <module fileurl="file://$PROJECT_DIR$/melos_rfwt.iml" filepath="$PROJECT_DIR$/melos_rfwt.iml" />
     </modules>
   </component>

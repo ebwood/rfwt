@@ -2,10 +2,9 @@ name: rfwt
 
 packages:
   - packages/txt2rfw
+  - packages/rfw2txt
 
 scripts:
-  get:
-    exec: dart pub get
   analyze:
     exec: dart analyze
   test:
