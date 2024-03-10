@@ -6,6 +6,7 @@ repository: https://github.com/ebwood/rfwt/tree/main/packages/txt2rfw
 
 environment:
   sdk: ^3.3.0
+  flutter: '>=3.10.0 <4.0.0'
 
 executables: 
   txt2rfw:
