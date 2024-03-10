@@ -7,6 +7,11 @@ String rwl2txt(RemoteWidgetLibrary library) {
 
 // RemoteWidgetLibrary to .rfwtxt format visitor
 class TxtVisitor {
+  final String _indent = '  ';
+  int _indentCount = 0;
+
+  String get _leadingIndent => _indent * _indentCount;
+
   String visit(RemoteWidgetLibrary library) {
     StringBuffer buffer = StringBuffer();
     // write imports
@@ -40,8 +45,11 @@ class TxtVisitor {
 
 // visit DynamicMap
   String _visitDynamicMap(DynamicMap map, {bool withoutCurlyBraces = false}) {
+    if (map.isEmpty) {
+      return ' { }';
+    }
     StringBuffer buffer = StringBuffer();
-
+    _indentCount++;
     DynamicMap newMap = map.map((key, value) {
       if (value is int && key == 'color') {
         return MapEntry(key, _int2Color(value));
@@ -49,11 +57,23 @@ class TxtVisitor {
       return MapEntry(key, _visitObject(value, dynamicMapKey: key));
     });
 
-    if (withoutCurlyBraces) {
-      buffer
-          .write(newMap.entries.map((e) => '${e.key}: ${e.value}').join(', '));
+    if (!withoutCurlyBraces && newMap.length == 1) {
+      buffer.write(
+          ' { ${newMap.entries.first.key}: ${newMap.entries.first.value} }');
+      _indentCount--;
     } else {
-      buffer.write(newMap);
+      if (!withoutCurlyBraces) {
+        buffer.write(' {\n');
+      }
+      for (var MapEntry(:key, :value) in newMap.entries) {
+        buffer.write(_leadingIndent);
+        buffer.write('$key: $value,\n');
+      }
+      _indentCount--;
+      if (!withoutCurlyBraces) {
+        buffer.write(_leadingIndent);
+        buffer.write('}');
+      }
     }
     return buffer.toString();
   }
@@ -67,20 +87,18 @@ class TxtVisitor {
     StringBuffer buffer = StringBuffer();
     if (node is ConstructorCall) {
       // ConstructorCall ignore arguments' curly braces
-      buffer.write('${node.name}(');
+      buffer.write('${node.name}(\n');
       buffer.write(_visitDynamicMap(node.arguments, withoutCurlyBraces: true));
+      buffer.write(_leadingIndent);
       buffer.write(')');
     } else if (node is Switch) {
       buffer.write('switch ');
       buffer.write(_visitObject(node.input));
-      buffer.write(' ');
-      node.outputs.forEach((key, value) {});
       // TODO: Can key be another type?
-      buffer.write(node.outputs.map((key, value) => MapEntry(
-          key == null ? 'default' : '$key',
-          _visitObject(value, dynamicMapKey: '$key'))));
+      buffer.write(_visitDynamicMap(node.outputs.map(
+          (key, value) => MapEntry(key == null ? 'default' : '$key', value))));
     } else if (node is EventHandler) {
-      buffer.write('event "${node.eventName}" ');
+      buffer.write('event "${node.eventName}"');
       buffer.write(_visitDynamicMap(node.eventArguments));
     } else {
       buffer.write(node.toString());
@@ -111,5 +129,12 @@ class TxtVisitor {
 
   String _int2Color(int value) {
     return '0x${value.toRadixString(16).toUpperCase().toUpperCase()}';
+  }
+}
+
+extension on StringBuffer {
+  writeWithIndent(Object data, {String indent = '  '}) {
+    write(indent);
+    write(data);
   }
 }
