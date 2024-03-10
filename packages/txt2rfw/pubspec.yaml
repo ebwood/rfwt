@@ -1,6 +1,6 @@
 name: txt2rfw
 description: convert .rfwtxt to .rfw
-version: 0.0.1
+version: 0.0.2
 repository: https://github.com/ebwood/rfwt/packages/txt2rfw
 
 environment:
