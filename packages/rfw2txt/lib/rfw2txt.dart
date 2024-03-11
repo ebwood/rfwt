@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:rfw/formats.dart';
 import 'package:rfw2txt/rwl2json.dart';
 import 'package:rfw2txt/rwl2txt.dart';
@@ -7,7 +8,13 @@ import 'package:rfw2txt/rwl2txt.dart';
 // Parse .rfw to .rfwtxt
 String rfw2txt(Uint8List bytes) {
   RemoteWidgetLibrary rwl = decodeLibraryBlob(bytes);
-  return rwl2txt(rwl);
+  String output = rwl2txt(rwl);
+  if (ListEquality()
+          .equals(bytes, encodeLibraryBlob(parseLibraryFile(output))) ==
+      false) {
+    throw Exception('rfw2txt failed');
+  }
+  return output;
 }
 
 // Parse .rfw to json

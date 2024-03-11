@@ -20,7 +20,8 @@ class TxtVisitor {
     buffer.writeln();
     // write widget declarations
     for (var element in library.widgets) {
-      buffer.writeln(_visitWidgetDeclaration(element));
+      buffer.write(_visitWidgetDeclaration(element));
+      buffer.write('\n\n');
     }
     return buffer.toString();
   }
@@ -87,9 +88,13 @@ class TxtVisitor {
     StringBuffer buffer = StringBuffer();
     if (node is ConstructorCall) {
       // ConstructorCall ignore arguments' curly braces
-      buffer.write('${node.name}(\n');
-      buffer.write(_visitDynamicMap(node.arguments, withoutCurlyBraces: true));
-      buffer.write(_leadingIndent);
+      buffer.write('${node.name}(');
+      if (node.arguments.isNotEmpty) {
+        buffer.write('\n');
+        buffer
+            .write(_visitDynamicMap(node.arguments, withoutCurlyBraces: true));
+        buffer.write(_leadingIndent);
+      }
       buffer.write(')');
     } else if (node is Switch) {
       buffer.write('switch ');

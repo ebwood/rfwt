@@ -30,11 +30,11 @@ void main() {
 
   test('rfw2txt with output path', () async {
     Process process = await Process.start('dart',
-        ['run', 'bin/rfw2txt.dart', "test/test.rfw", "-o", "test.rfwtxt"]);
+        ['run', 'bin/rfw2txt.dart', "test/test.rfw", "-o", "output.rfwtxt"]);
     await process.stdout.transform(utf8.decoder).forEach(print);
     await process.stderr.transform(utf8.decoder).forEach(print);
     File matchFile = File('test/test.rfw');
-    File outputTxtFile = File('test.rfwtxt');
+    File outputTxtFile = File('output.rfwtxt');
     File outputFile = File('output.rfw');
     outputFile.writeAsBytesSync(
         encodeLibraryBlob(parseLibraryFile(outputTxtFile.readAsStringSync())));

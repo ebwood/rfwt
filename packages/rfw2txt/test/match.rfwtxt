@@ -1,6 +1,8 @@
 import core.widgets;
 import core.material;
 
+widget Empty = Container();
+
 widget Counter = Container(
   color: 0xFF66AACC,
   child: Center(
