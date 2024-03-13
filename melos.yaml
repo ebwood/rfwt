@@ -9,3 +9,8 @@ scripts:
     exec: dart analyze
   test:
     exec: dart test
+
+command:
+  version:
+    hooks:
+      pre: melos clean && melos bootstrap && melos run analyze && melos run test
