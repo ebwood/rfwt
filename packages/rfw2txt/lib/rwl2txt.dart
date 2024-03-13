@@ -1,8 +1,18 @@
+import 'package:collection/collection.dart';
 import 'package:rfw/formats.dart';
 
 // Parse RemoteWidgetLibrary to .rfwtxt
 String rwl2txt(RemoteWidgetLibrary library) {
   return TxtVisitor().visit(library);
+}
+
+// int color to raw hex, should ignore quote for output
+class ColorValue {
+  final String color;
+  ColorValue(this.color);
+
+  @override
+  String toString() => color;
 }
 
 // RemoteWidgetLibrary to .rfwtxt format visitor
@@ -15,131 +25,148 @@ class TxtVisitor {
   String visit(RemoteWidgetLibrary library) {
     StringBuffer buffer = StringBuffer();
     // write imports
-    buffer.writeln(library.imports.map(_visitImport).join('\n'));
+    for (var element in library.imports) {
+      _visitImport(element, buffer);
+    }
 
-    buffer.writeln();
+    buffer.write('\n');
     // write widget declarations
     for (var element in library.widgets) {
-      buffer.write(_visitWidgetDeclaration(element));
-      buffer.write('\n\n');
+      _visitWidgetDeclaration(element, buffer);
     }
     return buffer.toString();
   }
 
 // visit import
-  String _visitImport(Import import) => 'import ${import.name};';
+  void _visitImport(Import import, StringBuffer buffer) {
+    buffer.write('import ${import.name};\n');
+  }
 
 // visit widget declaration
-  String _visitWidgetDeclaration(WidgetDeclaration widget) {
-    StringBuffer buffer = StringBuffer();
+  void _visitWidgetDeclaration(WidgetDeclaration widget, StringBuffer buffer) {
     buffer.write('widget ${widget.name}');
 
     if (widget.initialState != null) {
-      buffer.write(_visitDynamicMap(widget.initialState!));
+      buffer.write(' ');
+      _visitDynamicMap(widget.initialState!, buffer, singleLine: true);
     }
 
     buffer.write(' = ');
-    buffer.write(_visitObject(widget.root));
-    buffer.write(';');
-    return buffer.toString();
+    _visitObject(widget.root, buffer);
+    buffer.write(';\n\n');
   }
 
 // visit DynamicMap
-  String _visitDynamicMap(DynamicMap map, {bool withoutCurlyBraces = false}) {
+  void _visitDynamicMap(DynamicMap map, StringBuffer buffer,
+      {bool withoutCurlyBraces = false, bool singleLine = false}) {
     if (map.isEmpty) {
-      return ' { }';
+      buffer.write(withoutCurlyBraces ? '' : '{ }');
+      return;
     }
-    StringBuffer buffer = StringBuffer();
-    _indentCount++;
-    DynamicMap newMap = map.map((key, value) {
+
+    // convert int/list to color format, like 0x00FF0000
+    map = map.map((key, value) {
       if (value is int && key == 'color') {
         return MapEntry(key, _int2Color(value));
       }
-      return MapEntry(key, _visitObject(value, dynamicMapKey: key));
+      if (value is DynamicList &&
+          value.every((element) => element is int) &&
+          key == 'colors') {
+        return MapEntry(key, value.map((e) => _int2Color(e as int)).toList());
+      }
+      return MapEntry(key, value);
     });
 
-    if (!withoutCurlyBraces && newMap.length == 1) {
-      buffer.write(
-          ' { ${newMap.entries.first.key}: ${newMap.entries.first.value} }');
-      _indentCount--;
-    } else {
-      if (!withoutCurlyBraces) {
-        buffer.write(' {\n');
-      }
-      for (var MapEntry(:key, :value) in newMap.entries) {
-        buffer.write(_leadingIndent);
-        buffer.write('$key: $value,\n');
-      }
-      _indentCount--;
-      if (!withoutCurlyBraces) {
-        buffer.write(_leadingIndent);
-        buffer.write('}');
-      }
+    _indentCount++;
+    if (!withoutCurlyBraces) {
+      buffer.write('{');
+      if (singleLine) buffer.write(' ');
     }
-    return buffer.toString();
+    // if (map.length == 1) {
+    //   buffer.write('${map.entries.first.key}: ');
+    //   _visitObject(map.entries.first.value, buffer);
+    //   buffer.write(' ');
+    // } else {
+    if (!singleLine) buffer.write('\n');
+
+    for (var (index, MapEntry(:key, :value)) in map.entries.indexed) {
+      if (!singleLine) buffer.write(_leadingIndent);
+      buffer.write('$key: ');
+      _visitObject(value, buffer);
+      if (index != map.length - 1 || !singleLine) buffer.write(',');
+      if (!singleLine) buffer.write('\n');
+    }
+    // }
+    _indentCount--;
+    // if (map.length > 1) {
+    buffer.write(_leadingIndent);
+    // }
+    if (!withoutCurlyBraces) {
+      if (singleLine) buffer.write(' ');
+      buffer.write('}');
+    }
   }
 
 // visit DynamicList
-  String _visitDynamicList(DynamicList list) =>
-      list.map((e) => _visitObject(e)).toList().toString();
+  void _visitDynamicList(DynamicList list, StringBuffer buffer) {
+    buffer.write('[');
+    list.forEachIndexed((index, element) {
+      buffer.write(' ');
+      _visitObject(element, buffer);
+      if (index != list.length - 1) {
+        buffer.write(',');
+      } else {
+        buffer.write(' ');
+      }
+    });
+    buffer.write(']');
+  }
 
 // visit BlobNode
-  String _visitBlobNode(BlobNode node) {
-    StringBuffer buffer = StringBuffer();
+  void _visitBlobNode(BlobNode node, StringBuffer buffer) {
     if (node is ConstructorCall) {
       // ConstructorCall ignore arguments' curly braces
       buffer.write('${node.name}(');
       if (node.arguments.isNotEmpty) {
-        buffer.write('\n');
-        buffer
-            .write(_visitDynamicMap(node.arguments, withoutCurlyBraces: true));
-        buffer.write(_leadingIndent);
+        _visitDynamicMap(node.arguments, buffer, withoutCurlyBraces: true);
+        // buffer.write(_leadingIndent);
       }
       buffer.write(')');
     } else if (node is Switch) {
       buffer.write('switch ');
-      buffer.write(_visitObject(node.input));
+      _visitObject(node.input, buffer);
+      buffer.write(' ');
       // TODO: Can key be another type?
-      buffer.write(_visitDynamicMap(node.outputs.map(
-          (key, value) => MapEntry(key == null ? 'default' : '$key', value))));
+      _visitDynamicMap(
+          node.outputs.map((key, value) =>
+              MapEntry(key == null ? 'default' : '$key', value)),
+          buffer);
     } else if (node is EventHandler) {
-      buffer.write('event "${node.eventName}"');
-      buffer.write(_visitDynamicMap(node.eventArguments));
+      buffer.write('event "${node.eventName}" ');
+      _visitDynamicMap(node.eventArguments, buffer);
     } else {
       buffer.write(node.toString());
     }
-    return buffer.toString();
   }
 
 // BlobNode, DynamicMap, DynamicList, int, double, bool, String, null
-  String _visitObject(Object? object, {String? dynamicMapKey}) {
+  void _visitObject(Object? object, StringBuffer buffer) {
     if (object is BlobNode) {
-      return _visitBlobNode(object);
+      return _visitBlobNode(object, buffer);
     } else if (object is DynamicMap) {
-      return _visitDynamicMap(object);
+      return _visitDynamicMap(object, buffer);
     } else if (object is DynamicList) {
-      if (object.every((element) => element is int) &&
-          dynamicMapKey == 'colors') {
-        return object.map((e) => _int2Color(e as int)).toList().toString();
-      }
-      return _visitDynamicList(object);
-    }
-    if (object is String) {
-      return '"$object"';
+      return _visitDynamicList(object, buffer);
+    } else if (object is String) {
+      return buffer.write('"$object"');
     } else {
       //int, double, bool, null
-      return '$object';
+      return buffer.write(object);
     }
   }
 
-  String _int2Color(int value) {
-    return '0x${value.toRadixString(16).toUpperCase().toUpperCase()}';
-  }
-}
-
-extension on StringBuffer {
-  writeWithIndent(Object data, {String indent = '  '}) {
-    write(indent);
-    write(data);
+  ColorValue _int2Color(int value) {
+    return ColorValue(
+        '0x${value.toRadixString(16).toUpperCase().toUpperCase()}');
   }
 }
