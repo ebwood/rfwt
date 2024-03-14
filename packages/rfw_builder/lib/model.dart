@@ -2,6 +2,69 @@ import 'package:rfw/formats.dart';
 
 import 'base.dart';
 
+extension BlobNodeEx on BlobNode {
+  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
+    switch (this) {
+      case Missing():
+        return visitor.visitMissing(this as Missing, context);
+      case Loop():
+        return visitor.visitLoop(this as Loop, context);
+      case Switch():
+        return visitor.visitSwitch(this as Switch, context);
+      case ConstructorCall():
+        return visitor.visitConstructorCall(this as ConstructorCall, context);
+      case WidgetBuilderDeclaration():
+        return visitor.visitWidgetBuilderDeclaration(
+            this as WidgetBuilderDeclaration, context);
+      case Reference():
+        switch (this) {
+          case ArgsReference():
+            return visitor.visitArgsReference(this as ArgsReference, context);
+          case BoundArgsReference():
+            return visitor.visitBoundArgsReference(
+                this as BoundArgsReference, context);
+          case DataReference():
+            return visitor.visitDataReference(this as DataReference, context);
+          case WidgetBuilderArgReference():
+            return visitor.visitWidgetBuilderArgReference(
+                this as WidgetBuilderArgReference, context);
+          case LoopReference():
+            return visitor.visitLoopReference(this as LoopReference, context);
+          case BoundLoopReference():
+            return visitor.visitBoundLoopReference(
+                this as BoundLoopReference, context);
+          case StateReference():
+            return visitor.visitStateReference(this as StateReference, context);
+          case BoundStateReference():
+            return visitor.visitBoundStateReference(
+                this as BoundStateReference, context);
+          default:
+            // other custom reference
+            return visitor.visitOtherReference(this as Reference, context);
+        }
+      case AnyEventHandler():
+        switch (this) {
+          case EventHandler():
+            return visitor.visitEventHandler(this as EventHandler, context);
+          case SetStateHandler():
+            return visitor.visitSetStateHandler(
+                this as SetStateHandler, context);
+          default:
+            // other custom event handler
+            return visitor.visitOtherAnyEventHandler(
+                this as AnyEventHandler, context);
+        }
+      case Import():
+        return visitor.visitImport(this as Import, context);
+      case WidgetDeclaration():
+        return visitor.visitWidgetDeclaration(
+            this as WidgetDeclaration, context);
+      default:
+        return visitor.visitOtherBlobNode(this, context);
+    }
+  }
+}
+
 /// LibraryName
 class $LibraryName extends LibraryName implements Spec {
   const $LibraryName._(super.parts);
