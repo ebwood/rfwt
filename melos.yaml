@@ -5,8 +5,11 @@ packages:
   - packages/rfw2txt
   - packages/widget2rfw
   - packages/rfw_builder
+  - packages/rfw_tools
 
 scripts:
+  add_sort:
+    exec: dart pub add --dev import_sorter
   push:
     run: melos run analyze && git push
   import_sort:
