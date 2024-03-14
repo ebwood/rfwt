@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:rfw/formats.dart';
+
 import 'package:rfw2txt/rwl2json.dart';
 import 'package:rfw2txt/rwl2txt.dart';
 

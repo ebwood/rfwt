@@ -1,10 +1,11 @@
 @TestOn('vm')
+
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:rfw/formats.dart';
 import 'package:test/test.dart';
-import 'package:collection/collection.dart';
 
 void main() {
   test('rfw2txt without output path', () async {

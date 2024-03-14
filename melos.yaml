@@ -7,8 +7,12 @@ packages:
   - packages/rfw_builder
 
 scripts:
+  push:
+    run: melos run analyze && git push
+  import_sort:
+    exec: dart run import_sorter:main --no-comments
   analyze:
-    exec: dart analyze
+    exec: melos run import_sort && dart analyze
   test:
     exec: dart test
 

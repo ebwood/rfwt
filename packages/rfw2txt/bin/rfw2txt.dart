@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:path/path.dart';
-import 'package:rfw2txt/rfw2txt.dart';
 import 'package:yaml/yaml.dart';
+
+import 'package:rfw2txt/rfw2txt.dart';
 
 ArgParser buildParser() {
   return ArgParser()

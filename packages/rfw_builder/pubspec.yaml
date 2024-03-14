@@ -13,5 +13,6 @@ dependencies:
   rfw: ^1.0.25
 
 dev_dependencies:
+  import_sorter: ^4.6.0
   lints: ^3.0.0
   test: ^1.24.0

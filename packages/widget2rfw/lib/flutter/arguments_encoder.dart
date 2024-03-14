@@ -24,8 +24,6 @@ import 'dart:ui'
     show
         FontFeature; // TODO(ianh): https://github.com/flutter/flutter/issues/87235
 
-
-
 /// Signature for methods that decode structured values from a [DataSource],
 /// such as the static methods of [ArgumentEncoders].
 ///
@@ -40,7 +38,9 @@ class NotNullMap<K, V> extends MapBase<K, V> {
 
   factory NotNullMap.from(Map<K, V> map) {
     final notNullMap = NotNullMap<K, V>();
-    map.forEach((key, value) => notNullMap[key] = value);
+    map.forEach((key, value) {
+      notNullMap[key] = value;
+    });
     return notNullMap;
   }
 
@@ -593,6 +593,7 @@ class ArgumentEncoders {
   /// first match in [TileMode.values], defaulting to [TileMode.clamp] if
   /// nothing matches; thus, the string `mirror` would return [TileMode.mirror].
   static String? enumValue<T>(T? key) {
+    if (key == null) return null;
     return key.toString().split('.').last;
   }
 
