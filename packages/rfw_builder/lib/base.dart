@@ -13,6 +13,10 @@ abstract class Spec {
 }
 
 abstract class SpecVisitor<R> {
+  R visitDynamicList(DynamicList spec, [R? context]);
+
+  R visitDynamicMap(DynamicMap spec, [R? context]);
+
   R visitLibraryName(LibraryName spec, [R? context]);
 
   R visitFullyQualifiedWidgetName(FullyQualifiedWidgetName spec, [R? context]);
