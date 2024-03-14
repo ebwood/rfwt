@@ -355,13 +355,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.0"
-  txt2rfw:
-    dependency: "direct overridden"
-    description:
-      path: "../txt2rfw"
-      relative: true
-    source: path
-    version: "0.0.8"
   typed_data:
     dependency: transitive
     description:
