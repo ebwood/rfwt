@@ -5,7 +5,7 @@ packages:
   - packages/rfw2txt
   - packages/widget2rfw
   - packages/rfw_builder
-  - packages/rfw_tools
+  - packages/rfw_txt
 
 scripts:
   add_sort:

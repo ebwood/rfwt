@@ -1,6 +1,10 @@
-import 'package:args/args.dart';
+import 'dart:io';
 
-const String version = '0.0.1';
+import 'package:args/args.dart';
+import 'package:path/path.dart';
+import 'package:yaml/yaml.dart';
+
+import 'package:rfw_txt/src/txt2rfw.dart';
 
 ArgParser buildParser() {
   return ArgParser()
@@ -20,11 +24,12 @@ ArgParser buildParser() {
       'version',
       negatable: false,
       help: 'Print the tool version.',
-    );
+    )
+    ..addOption('output', abbr: 'o', help: 'Output path.');
 }
 
 void printUsage(ArgParser argParser) {
-  print('Usage: dart rfw_tools.dart <flags> [arguments]');
+  print('Usage: txt2rfw <flags> [arguments]');
   print(argParser.usage);
 }
 
@@ -40,22 +45,55 @@ void main(List<String> arguments) {
       return;
     }
     if (results.wasParsed('version')) {
-      print('rfw_tools version: $version');
+      String version = '0.0.1';
+      try {
+        File pubspecFile = File('pubspec.yaml');
+        version = loadYaml(pubspecFile.readAsStringSync())['version'];
+      } catch (e) {
+        print(e);
+      }
+
+      print('rfw2txt version: $version');
       return;
     }
+
     if (results.wasParsed('verbose')) {
       verbose = true;
     }
 
     // Act on the arguments provided.
-    print('Positional arguments: ${results.rest}');
     if (verbose) {
       print('[VERBOSE] All arguments: ${results.arguments}');
     }
+
+    String outputPath = '';
+    if (results.wasParsed('output')) {
+      outputPath = results['output'] as String;
+    }
+
+    if (results.arguments.isEmpty) {
+      print('No rfwtxt path provided.');
+      printUsage(argParser);
+      return;
+    }
+
+    // check if file exists
+    String txtPath = results.arguments[0];
+    File txtFile = File(txtPath);
+    if (!txtFile.existsSync()) {
+      print('File not found: $txtPath');
+      return;
+    }
+
+    if (outputPath.isEmpty) {
+      outputPath = '${basenameWithoutExtension(txtPath)}.rfw';
+    }
+    File outputFile = File(outputPath);
+
+    outputFile.writeAsBytesSync(txt2rfw(txtFile.readAsStringSync()));
   } on FormatException catch (e) {
     // Print usage information if an invalid argument was provided.
     print(e.message);
-    print('');
     printUsage(argParser);
   }
 }
