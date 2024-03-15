@@ -1279,10 +1279,11 @@ class ArgumentEncoders {
     return {'horizontal': density.horizontal, 'vertical': density.vertical};
   }
 
+  static Map<Type, WidgetVisitor> visitorMap = Map.from(coreWidgetsVisitorMap)
+    ..addAll(materialVisitorMap);
+
   static ConstructorCall? widget(Widget? widget) {
     if (widget == null) return null;
-    Map<Type, WidgetVisitor> visitorMap = Map.from(coreWidgetsVisitorMap)
-      ..addAll(materialVisitorMap);
     if (visitorMap.containsKey(widget.runtimeType)) {
       return visitorMap[widget.runtimeType]!.visit(widget);
     }
