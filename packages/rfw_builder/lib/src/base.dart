@@ -227,3 +227,10 @@ mixin class DefaultSpecVisitor<R> implements SpecVisitor<R> {
     throw UnimplementedError();
   }
 }
+
+extension DynamicMapX on DynamicMap {
+  DynamicMap add({required String key, required dynamic value}) {
+    addAll({key: value});
+    return this;
+  }
+}

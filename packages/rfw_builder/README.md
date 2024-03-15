@@ -2,16 +2,16 @@
 
 ## 1. rfw_builder: generate RemoteFlutterWidget tree
 
-## 2. rfw_txt: Converting between .rfw and .rfwtxt formats, including the intermediate class RemoteWidgetLibrary.
+## 2. rfw_txt: Converting between .rfw and .rfwtxt formats, including the intermediate class RemoteWidgetLibrary
 
-```bash
-// rfw2txt: convert .rfw to .rfwtxt
+install rfw2txt and txt2rfw command:
 
-rfw2txt test1.rfw [-o test.rfwtxt]
-```
+` dart pub global activate rfw_builder `
 
-```bash
-// txt2rfw: convert .rfwtxt to .rfw
+rfw2txt: convert .rfw to .rfwtxt:
 
-txt2rfw test2.rfwtxt [-o test2.rfw]
-```
+` rfw2txt test1.rfw [-o test.rfwtxt] `
+
+txt2rfw: convert .rfwtxt to .rfw:
+
+` txt2rfw test2.rfwtxt [-o test2.rfw] `

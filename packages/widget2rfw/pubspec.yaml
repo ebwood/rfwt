@@ -1,5 +1,6 @@
 name: widget2rfw
-description: "A new Flutter package project."
+description: |
+  convert flutter widget to .rfw file.
 version: 0.0.1
 homepage: https://github.com/ebwood/rfwt
 
