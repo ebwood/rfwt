@@ -220,7 +220,7 @@ mixin class DefaultSpecVisitor<R> implements SpecVisitor<R> {
     // TODO: implement visitWidgetDeclaration
     throw UnimplementedError();
   }
-  
+
   @override
   R visitObject(Object? spec, [R? context]) {
     // TODO: implement visitObject

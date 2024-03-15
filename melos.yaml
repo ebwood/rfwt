@@ -2,7 +2,6 @@ name: rfwt
 
 packages:
   - packages/rfw_builder
-  - packages/rfw_txt
   - packages/widget2rfw
 
 scripts:
@@ -14,6 +13,8 @@ scripts:
     exec: dart run import_sorter:main --no-comments
   analyze:
     exec: melos run import_sort && dart analyze
+  analyze_server:
+    exec: dart analyze
   test:
     exec: dart test
 

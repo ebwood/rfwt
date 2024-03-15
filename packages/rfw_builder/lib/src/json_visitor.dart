@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:rfw/formats.dart';
+
 import 'package:rfw_builder/rfw_builder.dart';
 
 // Parse .rfw to json
