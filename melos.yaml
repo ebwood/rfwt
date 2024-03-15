@@ -24,5 +24,5 @@ scripts:
 command:
   version:
     hooks:
-      pre: melos clean && melos bootstrap && melos run analyze && melos run test
+      pre: melos clean && melos bootstrap && melos run analyze && melos run test && melos change_version
       post: melos change_version
