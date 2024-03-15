@@ -1,0 +1,19 @@
+import core;
+import material;
+
+widget MaterialShop = Scaffold(
+  appBar: AppBar(
+    title: Text(text: ['Products']),
+  ),
+  body: ListView(
+    children: [
+      ...for product in data.server.games:
+        Product(product: product)
+    ],
+  ),
+);
+
+widget Product = ListTile(
+  title: Text(text: args.product.name),
+  onTap: event 'shop.productSelect' { name: args.product.name, path: args.product.link },
+);
