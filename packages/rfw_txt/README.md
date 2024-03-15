@@ -1,1 +1,1 @@
-A sample command-line application providing basic argument parsing with an entrypoint in `bin/`.
+# A tool for converting between .rfw and .rfwtxt formats, including the intermediate class RemoteWidgetLibrary.
