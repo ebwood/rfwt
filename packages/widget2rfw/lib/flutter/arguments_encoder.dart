@@ -225,11 +225,12 @@ class ArgumentEncoders {
   ///
   /// Returns null if it's not an integer; otherwise, passes it to the [
   /// Color] constructor.
-  static String? color(Color? color) {
+  static int? color(Color? color) {
     if (color == null) {
       return null;
     }
-    return '0x${color.value.toRadixString(16).toUpperCase().toUpperCase()}';
+    // return '0x${color.value.toRadixString(16).padLeft(8, '0').toUpperCase()}';
+    return color.value;
   }
 
   /// Returns a [ColorFilter] from the specified map.
@@ -656,7 +657,7 @@ class ArgumentEncoders {
           'type': 'linear',
           'begin': alignment(gradient.begin),
           'end': alignment(gradient.end),
-          'colors': list<Color, String?>(gradient.colors, color),
+          'colors': list<Color, dynamic>(gradient.colors, color),
           'stops': list<double, double>(gradient.stops),
           'tileMode': enumValue(gradient.tileMode)
         });
@@ -664,7 +665,7 @@ class ArgumentEncoders {
         return NotNullMap.from({
           'type': 'radial',
           'center': alignment(gradient.center),
-          'colors': list<Color, String?>(gradient.colors, color),
+          'colors': list<Color, dynamic>(gradient.colors, color),
           'stops': list<double, double>(gradient.stops),
           'tileMode': enumValue(gradient.tileMode),
           'focal': alignment(gradient.focal),
@@ -676,7 +677,7 @@ class ArgumentEncoders {
           'center': alignment(gradient.center),
           'startAngle': gradient.startAngle,
           'endAngle': gradient.endAngle,
-          'colors': list<Color, String?>(gradient.colors, color),
+          'colors': list<Color, dynamic>(gradient.colors, color),
           'stops': list<double, double>(gradient.stops),
           'tileMode': enumValue(gradient.tileMode),
         });
