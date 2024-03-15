@@ -15,6 +15,25 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`rfw_builder` - `v0.0.2`](#rfw_builder---v002)
+
+---
+
+#### `rfw_builder` - `v0.0.2`
+
+
+## 2024-03-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`rfw_txt` - `v0.0.2`](#rfw_txt---v002)
 
 ---

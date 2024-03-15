@@ -1,7 +1,8 @@
 name: rfw_builder
 description: |
-  A builder tool to generate RemoteFlutterWidget tree
-version: 0.0.1
+  A builder tool to generate RemoteFlutterWidget tree;
+  converting between .rfw and .rfwtxt formats, including the intermediate class RemoteWidgetLibrary.
+version: 0.0.2
 repository: https://github.com/ebwood/rfwt
 
 environment:
