@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`widget2rfw` - `v0.0.1+1`](#widget2rfw---v0011)
+
+---
+
+#### `widget2rfw` - `v0.0.1+1`
+
+ - remove convert color to hex, or else it will be string surrounding with quote"
+
+
+## 2024-03-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`rfw_builder` - `v0.0.3`](#rfw_builder---v003)
 
 ---
