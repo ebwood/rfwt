@@ -8,6 +8,10 @@ repository: https://github.com/ebwood/rfwt
 environment:
   sdk: ^3.2.0
 
+executables: 
+  rfw2txt:
+  txt2rfw:
+
 dependencies:
   args: ^2.4.2
   collection: ^1.18.0

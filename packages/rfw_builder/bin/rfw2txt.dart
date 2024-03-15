@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:yaml/yaml.dart';
 
 import 'package:rfw_builder/rfw_txt.dart';
+import 'version.dart';
 
 ArgParser buildParser() {
   return ArgParser()
@@ -50,14 +50,6 @@ void main(List<String> arguments) {
       return;
     }
     if (results.wasParsed('version')) {
-      String version = '0.0.1';
-      try {
-        File pubFile = File('pubspec.yaml');
-        version = loadYaml(pubFile.readAsStringSync())['version'];
-      } catch (e) {
-        print(e);
-      }
-
       print('rfw2txt version: $version');
       return;
     }
