@@ -4,14 +4,12 @@ import 'package:rfw/formats.dart';
 import 'package:rfw_builder/rfw_builder.dart';
 
 class TxtVisitor extends SpecVisitor<StringSink> {
-  TxtVisitor({String? indent, int? depth})
-      : _indent = indent ?? '  ',
-        _depth = depth ?? 0;
+  TxtVisitor({this.indent = '  ', int depth = 0}) : _depth = depth;
 
-  final String _indent;
+  final String indent;
   int _depth = 0;
 
-  String get _leadingIndent => _indent * _depth;
+  String get _leadingIndent => indent * _depth;
 
   @override
   StringSink visitArgsReference(ArgsReference spec, [StringSink? context]) {
@@ -158,17 +156,31 @@ class TxtVisitor extends SpecVisitor<StringSink> {
     return output;
   }
 
+  int _loopVariableLength = -1;
   @override
   StringSink visitLoop(Loop spec, [StringSink? context]) {
     final output = context ?? StringBuffer();
-    output.write('...for loop in ${spec.input}: ${spec.output}');
+    _depth++;
+    output.write('\n');
+    output.write(_leadingIndent);
+    _loopVariableLength++;
+    output.write('...for loop$_loopVariableLength in ');
+    visitObject(spec.input, output);
+    output.write(':\n');
+    _depth++;
+    output.write(_leadingIndent);
+    visitObject(spec.output, output);
+    _loopVariableLength--;
+    _depth--;
+    _depth--;
     return output;
   }
 
   @override
   StringSink visitLoopReference(LoopReference spec, [StringSink? context]) {
     final output = context ?? StringBuffer();
-    output.write('loop${spec.loop}.${spec.parts.join(".")}');
+    output.write('loop${spec.loop}');
+    // output.write('loop${spec.loop}.${spec.parts.join(".")}');
     return output;
   }
 
