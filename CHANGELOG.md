@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`rfw_txt` - `v0.0.2`](#rfw_txt---v002)
+
+---
+
+#### `rfw_txt` - `v0.0.2`
+
+ - Bump "rfw_txt" to `0.0.2`.
+
+
+## 2024-03-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`rfw2txt` - `v0.0.9+3`](#rfw2txt---v0093)
  - [`txt2rfw` - `v0.0.8+1`](#txt2rfw---v0081)
 

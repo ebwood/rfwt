@@ -1,7 +1,7 @@
 name: rfw_txt
 description: |
   A tool for converting between .rfw and .rfwtxt formats, including the intermediate class RemoteWidgetLibrary.
-version: 0.0.1
+version: 0.0.2
 repository: https://github.com/ebwood/rfwt
 
 environment:
