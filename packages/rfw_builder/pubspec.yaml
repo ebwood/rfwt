@@ -5,14 +5,14 @@ version: 0.0.1
 repository: https://github.com/ebwood/rfwt
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
-  flutter: '>=3.16.0'
+  sdk: ^3.2.0
 
-
-# Add regular dependencies here.
 dependencies:
   args: ^2.4.2
+  collection: ^1.18.0
+  path: ^1.9.0
   rfw: ^1.0.25
+  yaml: ^3.1.2
 
 dev_dependencies:
   import_sorter: ^4.6.0

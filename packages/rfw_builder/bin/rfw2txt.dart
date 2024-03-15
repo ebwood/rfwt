@@ -1,10 +1,9 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:path/path.dart';
 import 'package:yaml/yaml.dart';
 
-import 'package:rfw_txt/src/txt2rfw.dart';
+import 'package:rfw_builder/rfw_txt.dart';
 
 ArgParser buildParser() {
   return ArgParser()
@@ -16,12 +15,12 @@ ArgParser buildParser() {
     )
     ..addFlag(
       'verbose',
-      abbr: 'v',
       negatable: false,
       help: 'Show additional command output.',
     )
     ..addFlag(
       'version',
+      abbr: 'v',
       negatable: false,
       help: 'Print the tool version.',
     )
@@ -29,7 +28,7 @@ ArgParser buildParser() {
 }
 
 void printUsage(ArgParser argParser) {
-  print('Usage: txt2rfw <flags> [arguments]');
+  print('Usage: rfw2txt <flags> [arguments]');
   print(argParser.usage);
 }
 
@@ -37,6 +36,12 @@ void main(List<String> arguments) {
   final ArgParser argParser = buildParser();
   try {
     final ArgResults results = argParser.parse(arguments);
+
+    if (results.arguments.isEmpty) {
+      printUsage(argParser);
+      return;
+    }
+
     bool verbose = false;
 
     // Process the parsed arguments.
@@ -47,8 +52,8 @@ void main(List<String> arguments) {
     if (results.wasParsed('version')) {
       String version = '0.0.1';
       try {
-        File pubspecFile = File('pubspec.yaml');
-        version = loadYaml(pubspecFile.readAsStringSync())['version'];
+        File pubFile = File('pubspec.yaml');
+        version = loadYaml(pubFile.readAsStringSync())['version'];
       } catch (e) {
         print(e);
       }
@@ -56,12 +61,10 @@ void main(List<String> arguments) {
       print('rfw2txt version: $version');
       return;
     }
-
     if (results.wasParsed('verbose')) {
       verbose = true;
     }
 
-    // Act on the arguments provided.
     if (verbose) {
       print('[VERBOSE] All arguments: ${results.arguments}');
     }
@@ -71,26 +74,23 @@ void main(List<String> arguments) {
       outputPath = results['output'] as String;
     }
 
-    if (results.arguments.isEmpty) {
-      print('No rfwtxt path provided.');
-      printUsage(argParser);
-      return;
-    }
-
     // check if file exists
-    String txtPath = results.arguments[0];
-    File txtFile = File(txtPath);
-    if (!txtFile.existsSync()) {
-      print('File not found: $txtPath');
+    String rfwPath = results.arguments[0];
+    File rfwFile = File(rfwPath);
+    if (!rfwFile.existsSync()) {
+      print('File not found: $rfwPath');
       return;
     }
 
+    String outputTxt = rfw2txt(rfwFile.readAsBytesSync());
     if (outputPath.isEmpty) {
-      outputPath = '${basenameWithoutExtension(txtPath)}.rfw';
+      // no specific output path, print to console
+      print(outputTxt);
+    } else {
+      // write to output file
+      File outputFile = File(outputPath);
+      outputFile.writeAsStringSync(rfw2txt(rfwFile.readAsBytesSync()));
     }
-    File outputFile = File(outputPath);
-
-    outputFile.writeAsBytesSync(txt2rfw(txtFile.readAsStringSync()));
   } on FormatException catch (e) {
     // Print usage information if an invalid argument was provided.
     print(e.message);
