@@ -3,7 +3,12 @@ description: rfw(remote flutter widget) tools
 homepage: https://github.com/ebwood/rfwt
 publish_to: none
 
+executables: 
+  change_version:
+
 environment:
   sdk: ">=3.2.0"
 dev_dependencies:
   melos: ^4.1.0
+dependencies:
+  yaml: ^3.1.2

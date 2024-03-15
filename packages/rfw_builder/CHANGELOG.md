@@ -1,3 +1,7 @@
+## 0.0.3+1
+
+ - fix rfw2txt --version command fail issue
+
 ## 0.0.3
 
 ## 0.0.2

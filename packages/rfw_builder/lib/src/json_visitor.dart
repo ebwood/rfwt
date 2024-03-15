@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:rfw/formats.dart';
@@ -13,6 +14,13 @@ DynamicMap rfw2json(Uint8List bytes) {
 // Parse RemoteWidgetLibrary to json
 DynamicMap rwl2json(RemoteWidgetLibrary library) =>
     library.accept(JsonVisitor()) as DynamicMap;
+
+extension DynamicMapEx on DynamicMap {
+  String pretty() {
+    JsonEncoder encoder = JsonEncoder.withIndent('  ');
+    return encoder.convert(this);
+  }
+}
 
 class JsonVisitor extends SpecVisitor<dynamic> {
   @override
