@@ -13,6 +13,7 @@ void main() {
   try {
     String version = loadYaml(pubFile.readAsStringSync())['version'];
     versionFile.writeAsStringSync("const version = '$version';");
+    Process.runSync("git", ["add", "bin/version.dart"]);
   } catch (e) {
     print(e);
   }

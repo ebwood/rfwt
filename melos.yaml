@@ -25,3 +25,4 @@ command:
   version:
     hooks:
       pre: melos clean && melos bootstrap && melos run analyze && melos run test
+      post: melos change_version
