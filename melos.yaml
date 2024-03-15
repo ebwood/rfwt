@@ -3,8 +3,8 @@ name: rfwt
 packages:
   - packages/txt2rfw
   - packages/rfw2txt
-  - packages/widget2rfw
-  - packages/rfw_builder
+  # - packages/widget2rfw
+  # - packages/rfw_builder
   - packages/rfw_txt
 
 scripts:
