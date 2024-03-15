@@ -1,3 +1,7 @@
+## 0.0.8+1
+
+ - move txt2rfw to rfw_txt
+
 ## 0.0.8
 
  - add sdk upperbound version

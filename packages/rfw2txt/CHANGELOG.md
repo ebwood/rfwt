@@ -1,3 +1,7 @@
+## 0.0.9+3
+
+ - move rfw2txt to rfw_txt
+
 ## 0.0.9+2
 
  - Bump "rfw2txt" to `0.0.9+2`.

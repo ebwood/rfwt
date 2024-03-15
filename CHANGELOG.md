@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-03-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`rfw2txt` - `v0.0.9+3`](#rfw2txt---v0093)
+ - [`txt2rfw` - `v0.0.8+1`](#txt2rfw---v0081)
+
+---
+
+#### `rfw2txt` - `v0.0.9+3`
+
+ - move rfw2txt to rfw_txt
+
+#### `txt2rfw` - `v0.0.8+1`
+
+ - move txt2rfw to rfw_txt
+
+
 ## 2024-03-13
 
 ### Changes
