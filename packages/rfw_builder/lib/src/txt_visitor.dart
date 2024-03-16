@@ -180,7 +180,9 @@ class TxtVisitor extends SpecVisitor<StringSink> {
   StringSink visitLoopReference(LoopReference spec, [StringSink? context]) {
     final output = context ?? StringBuffer();
     output.write('loop${spec.loop}');
-    // output.write('loop${spec.loop}.${spec.parts.join(".")}');
+    if (spec.parts.isNotEmpty) {
+      output.write('.${spec.parts.join('.')}');
+    }
     return output;
   }
 
