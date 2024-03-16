@@ -6,7 +6,7 @@ import 'package:rfw/rfw.dart';
 import 'arguments_encoder.dart';
 import 'runtime.dart';
 
-Map<Type, MaterialWidgetVisitor> materialVisitorMap = {
+Map<Type, MaterialWidgetVisitor> materialWidgetsVisitorMap = {
   AboutListTile: AboutListTileVisitor(),
   AppBar: AppBarVisitor(),
   ButtonBar: ButtonBarVisitor(),

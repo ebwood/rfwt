@@ -1280,7 +1280,7 @@ class ArgumentEncoders {
   }
 
   static Map<Type, WidgetVisitor> visitorMap = Map.from(coreWidgetsVisitorMap)
-    ..addAll(materialVisitorMap);
+    ..addAll(materialWidgetsVisitorMap);
 
   static ConstructorCall? widget(Widget? widget) {
     if (widget == null) return null;
@@ -1293,7 +1293,7 @@ class ArgumentEncoders {
   static List<ConstructorCall>? widgetList(List<Widget>? widgets) {
     if (widgets == null) return null;
     Map<Type, WidgetVisitor> visitorMap = Map.from(coreWidgetsVisitorMap)
-      ..addAll(materialVisitorMap);
+      ..addAll(materialWidgetsVisitorMap);
 
     return widgets.map((widget) {
       if (visitorMap.containsKey(widget.runtimeType)) {
