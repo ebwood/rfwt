@@ -1,3 +1,7 @@
+## 0.0.3+7
+
+ - fix loop reference parts issue
+
 ## 0.0.3+6
 
 ## 0.0.3+5

@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-03-16
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`rfw_builder` - `v0.0.3+7`](#rfw_builder---v0037)
+
+---
+
+#### `rfw_builder` - `v0.0.3+7`
+
+ - fix loop reference parts issue
+
+
 ## 2024-03-15
 
 ### Changes
