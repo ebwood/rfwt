@@ -64,11 +64,12 @@ class TxtVisitor extends SpecVisitor<StringSink> {
   StringSink visitDynamicList(DynamicList spec, [StringSink? context]) {
     final output = context ?? StringBuffer();
     output.write('[');
+    _depth++;
     spec.forEachIndexed((index, element) {
-      output.write(' ');
       visitObject(element, output);
-      output.write(index != spec.length - 1 ? ',' : ' ');
+      if (index != spec.length - 1) output.write(', ');
     });
+    _depth--;
     output.write(']');
     return output;
   }
@@ -160,7 +161,6 @@ class TxtVisitor extends SpecVisitor<StringSink> {
   @override
   StringSink visitLoop(Loop spec, [StringSink? context]) {
     final output = context ?? StringBuffer();
-    _depth++;
     output.write('\n');
     output.write(_leadingIndent);
     _loopVariableLength++;
@@ -171,7 +171,6 @@ class TxtVisitor extends SpecVisitor<StringSink> {
     output.write(_leadingIndent);
     visitObject(spec.output, output);
     _loopVariableLength--;
-    _depth--;
     _depth--;
     return output;
   }

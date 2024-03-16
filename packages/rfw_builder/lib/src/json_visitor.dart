@@ -22,6 +22,38 @@ extension DynamicMapEx on DynamicMap {
   }
 }
 
+// convert value to rfw data txt
+StringBuffer value2DataTxt(Object? value, [StringBuffer? buffer]) {
+  buffer ??= StringBuffer();
+  if (value == null) {
+    // nothing
+    return buffer;
+  }
+
+  if (value is String) {
+    buffer.write('"$value"');
+  } else if (value is DynamicMap) {
+    buffer.write('{');
+    for (var element in value.entries) {
+      buffer.write(element.key);
+      buffer.write(':');
+      value2DataTxt(element.value, buffer);
+      buffer.write(',');
+    }
+    buffer.write('}');
+  } else if (value is DynamicList) {
+    buffer.write('[');
+    for (var element in value) {
+      value2DataTxt(element, buffer);
+      buffer.write(',');
+    }
+    buffer.write(']');
+  } else {
+    buffer.write(value);
+  }
+  return buffer;
+}
+
 class JsonVisitor extends SpecVisitor<dynamic> {
   @override
   DynamicMap visitArgsReference(ArgsReference spec, [context]) {
