@@ -1,3 +1,7 @@
+## 0.0.3+8
+
+ - more beautiful txtvisitor
+
 ## 0.0.3+7
 
  - fix loop reference parts issue
