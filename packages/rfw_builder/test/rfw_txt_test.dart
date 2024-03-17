@@ -10,7 +10,7 @@ import 'package:test/test.dart';
 void main() {
   test('rfw2txt with output path', () async {
     print('current: $current');
-    File inputRfwFile = File('example/data/test2.rfw');
+    File inputRfwFile = File('test/test.rfw');
     File outputTxtFile = File('test/output.rfwtxt');
 
     Process process = await Process.start('dart', [
@@ -36,9 +36,9 @@ void main() {
   });
 
   test('txt2rfw with output path', () async {
-    File inputTxtFile = File('example/data/test2.rfwtxt');
+    File inputTxtFile = File('test/test.rfwtxt');
     File outputRfwFile = File('test/output.rfw');
-    File matchRfwFile = File('example/data/test2.rfw');
+    File matchRfwFile = File('test/test.rfw');
     Process process = await Process.start('dart', [
       'run',
       'bin/txt2rfw.dart',
