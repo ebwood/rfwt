@@ -2,6 +2,18 @@ import 'package:rfw/formats.dart';
 
 import 'base.dart';
 
+extension DynamicMapEx on DynamicMap {
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitDynamicMap(this, context, params);
+  }
+}
+
+extension DynamicListEx on DynamicList {
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitDynamicList(this, context, params);
+  }
+}
+
 extension BlobNodeEx on BlobNode {
   R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
     switch (this) {
@@ -12,40 +24,47 @@ extension BlobNodeEx on BlobNode {
       case Switch():
         return visitor.visitSwitch(this as Switch, context, params);
       case ConstructorCall():
-        return visitor.visitConstructorCall(this as ConstructorCall, context, params);
+        return visitor.visitConstructorCall(
+            this as ConstructorCall, context, params);
       case WidgetBuilderDeclaration():
         return visitor.visitWidgetBuilderDeclaration(
             this as WidgetBuilderDeclaration, context, params);
       case Reference():
         switch (this) {
           case ArgsReference():
-            return visitor.visitArgsReference(this as ArgsReference, context, params);
+            return visitor.visitArgsReference(
+                this as ArgsReference, context, params);
           case BoundArgsReference():
             return visitor.visitBoundArgsReference(
                 this as BoundArgsReference, context, params);
           case DataReference():
-            return visitor.visitDataReference(this as DataReference, context, params);
+            return visitor.visitDataReference(
+                this as DataReference, context, params);
           case WidgetBuilderArgReference():
             return visitor.visitWidgetBuilderArgReference(
                 this as WidgetBuilderArgReference, context, params);
           case LoopReference():
-            return visitor.visitLoopReference(this as LoopReference, context, params);
+            return visitor.visitLoopReference(
+                this as LoopReference, context, params);
           case BoundLoopReference():
             return visitor.visitBoundLoopReference(
                 this as BoundLoopReference, context, params);
           case StateReference():
-            return visitor.visitStateReference(this as StateReference, context, params);
+            return visitor.visitStateReference(
+                this as StateReference, context, params);
           case BoundStateReference():
             return visitor.visitBoundStateReference(
                 this as BoundStateReference, context, params);
           default:
             // other custom reference
-            return visitor.visitOtherReference(this as Reference, context, params);
+            return visitor.visitOtherReference(
+                this as Reference, context, params);
         }
       case AnyEventHandler():
         switch (this) {
           case EventHandler():
-            return visitor.visitEventHandler(this as EventHandler, context, params);
+            return visitor.visitEventHandler(
+                this as EventHandler, context, params);
           case SetStateHandler():
             return visitor.visitSetStateHandler(
                 this as SetStateHandler, context, params);

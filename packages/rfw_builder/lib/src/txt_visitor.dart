@@ -1,9 +1,8 @@
-import 'package:collection/collection.dart';
 import 'package:rfw/formats.dart';
 
 import 'package:rfw_builder/rfw_builder.dart';
 
-class TxtVisitor extends SpecVisitor<StringSink, int> {
+class TxtVisitor extends SpecVisitor<String, int> {
   TxtVisitor({this.indent = '  ', int depth = 0}) : _depth = depth;
 
   final String indent;
@@ -12,312 +11,341 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
   String get _leadingIndent => indent * _depth;
 
   @override
-  StringSink visitArgsReference(ArgsReference spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitArgsReference(ArgsReference spec,
+      [String? context, int? params]) {
+    final output = StringBuffer();
     output.write('args.${spec.parts.join(".")}');
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitBoundArgsReference(BoundArgsReference spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitBoundArgsReference(BoundArgsReference spec,
+      [String? context, int? params]) {
+    final output = StringBuffer();
     output.write('args(${spec.arguments}).${spec.parts.join(".")}');
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitBoundLoopReference(BoundLoopReference spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitBoundLoopReference(BoundLoopReference spec,
+      [String? context, int? params]) {
+    final output = StringBuffer();
     output.write('loop(${spec.value}).${spec.parts.join(".")}');
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitBoundStateReference(BoundStateReference spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitBoundStateReference(BoundStateReference spec,
+      [String? context, int? params]) {
+    final output = StringBuffer();
     output.write('state^${spec.depth}.${spec.parts.join(".")}');
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitConstructorCall(ConstructorCall spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
-    output.write('${spec.name}(');
+  String visitConstructorCall(ConstructorCall spec,
+      [String? context, int? params]) {
+    final output = StringBuffer();
+
+    String left = '${spec.name}(';
+    String right = ')';
+
+    int parentSpace = left.length + right.length + (params ?? 0);
+
+    output.write(left);
     if (spec.arguments.isNotEmpty) {
-      visitDynamicMap(spec.arguments, output, params, true);
+      output.write(visitDynamicMap(spec.arguments, context, parentSpace, true));
     }
     output.write(')');
-    return output;
+
+    return output.toString();
   }
 
   @override
-  StringSink visitDataReference(DataReference spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitDataReference(DataReference spec,
+      [String? context, int? params]) {
+    final output = StringBuffer();
     output.write('data.${spec.parts.join(".")}');
-    return output;
+    return output.toString();
+  }
+
+  bool checkOverLineLimit(List<String> value, int parentSpace,
+      {int limit = 80}) {
+    return value.any((e) => e.contains('\n')) ||
+        value.join('').length + parentSpace > limit;
+  }
+
+  StringBuffer joinLines(String start, String end, int parentSpace,
+      List<String> lines, StringBuffer buffer) {
+    bool overLineLimit =
+        checkOverLineLimit([start, lines.join(', '), end], parentSpace);
+
+    buffer.write(start);
+    if (overLineLimit) {
+      buffer.write('\n');
+      lines = lines.map((e) {
+        List<String> content = e.split('\n').map((e) => '$indent$e').toList();
+        return content.join('\n');
+      }).toList();
+
+      buffer.write(lines.join(',\n'));
+      buffer.write('\n');
+    } else {
+      buffer.write(lines.join(', '));
+    }
+    buffer.write(end);
+
+    return buffer;
   }
 
   @override
-  StringSink visitDynamicList(DynamicList spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
-    output.write('[');
-    _depth++;
-    spec.forEachIndexed((index, element) {
-      visitObject(element, output);
-      if (index != spec.length - 1) output.write(', ');
-    });
-    _depth--;
-    output.write(']');
-    return output;
+  String visitDynamicList(DynamicList spec, [String? context, int? params]) {
+    String start = '[';
+    String end = ']';
+
+    StringBuffer buffer = StringBuffer();
+    int parentSpace = params ?? 0;
+    List<String> arguments = spec
+        .map((e) =>
+            visitObject(e, context, parentSpace + start.length + end.length))
+        .toList();
+
+    joinLines(start, end, parentSpace, arguments, buffer);
+
+    return buffer.toString();
   }
 
   @override
-  StringSink visitDynamicMap(DynamicMap spec,
-      [StringSink? context,
+  String visitDynamicMap(DynamicMap spec,
+      [String? context,
       int? params,
       bool withoutCurlyBraces = false,
       bool singleLine = false]) {
-    final output = context ?? StringBuffer();
+    int parentSpace = params ?? 0;
 
-    if (spec.isEmpty) {
-      output.write(withoutCurlyBraces ? '' : '{ }');
-      return output;
-    }
+    StringBuffer buffer = StringBuffer();
+    String start = withoutCurlyBraces ? '' : '{';
+    String end = withoutCurlyBraces ? '' : '}';
 
-    // convert int/list to color format, like 0x00FF0000
-    spec = spec.map((key, value) {
-      if (value is int && key == 'color') {
-        return MapEntry(key, _int2Color(value));
-      }
-      if (value is DynamicList &&
-          value.every((element) => element is int) &&
-          key == 'colors') {
-        return MapEntry(key, value.map((e) => _int2Color(e as int)).toList());
-      }
-      return MapEntry(key, value);
-    });
+    List<String> arguments = spec.entries.map((e) {
+      String key = '${e.key}: ';
+      String value = visitObject(e.value, context,
+          parentSpace + start.length + end.length + key.length);
+      return '$key$value';
+    }).toList();
 
-    _depth++;
-    if (!withoutCurlyBraces) {
-      output.write('{');
-      if (singleLine) output.write(' ');
-    }
+    joinLines(start, end, parentSpace, arguments, buffer);
 
-    if (!singleLine) output.write('\n');
-
-    for (var (index, MapEntry(:key, :value)) in spec.entries.indexed) {
-      if (!singleLine) output.write(_leadingIndent);
-      output.write('$key: ');
-      visitObject(value, output);
-      if (index != spec.length - 1 || !singleLine) output.write(',');
-      if (!singleLine) output.write('\n');
-    }
-
-    _depth--;
-    output.write(_leadingIndent);
-    if (!withoutCurlyBraces) {
-      if (singleLine) output.write(' ');
-      output.write('}');
-    }
-    return output;
+    return buffer.toString();
   }
 
   @override
-  StringSink visitEventHandler(EventHandler spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitEventHandler(EventHandler spec, [String? context, int? params]) {
+    final output = StringBuffer();
     output.write('event "${spec.eventName}" ');
-    visitDynamicMap(spec.eventArguments, output);
-    return output;
+    output.write(visitDynamicMap(spec.eventArguments, context, params));
+    return output.toString();
   }
 
   @override
-  StringSink visitFullyQualifiedWidgetName(FullyQualifiedWidgetName spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
-    visitLibraryName(spec.library, output);
+  String visitFullyQualifiedWidgetName(FullyQualifiedWidgetName spec,
+      [String? context, int? params]) {
+    final output = StringBuffer();
+    output.write(visitLibraryName(spec.library, context, params));
     output.write(':${spec.widget}');
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitImport(Import spec, [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitImport(Import spec, [String? context, int? params]) {
+    final output = StringBuffer();
     output.write("import ");
-    visitLibraryName(spec.name, output);
+    output.write(visitLibraryName(spec.name, context, params));
     output.write(";\n");
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitLibraryName(LibraryName spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitLibraryName(LibraryName spec, [String? context, int? params]) {
+    final output = StringBuffer();
     output.write(spec.parts.join('.'));
-    return output;
+    return output.toString();
   }
 
   int _loopVariableLength = -1;
   @override
-  StringSink visitLoop(Loop spec, [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitLoop(Loop spec, [String? context, int? params]) {
+    final output = StringBuffer();
     output.write('\n');
     output.write(_leadingIndent);
     _loopVariableLength++;
     output.write('...for loop$_loopVariableLength in ');
-    visitObject(spec.input, output);
+    output.write(visitObject(spec.input, context, params));
     output.write(':\n');
     _depth++;
     output.write(_leadingIndent);
-    visitObject(spec.output, output);
+    output.write(visitObject(spec.output, context, params));
     _loopVariableLength--;
     _depth--;
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitLoopReference(LoopReference spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitLoopReference(LoopReference spec,
+      [String? context, int? params]) {
+    final output = StringBuffer();
     output.write('loop${spec.loop}');
     if (spec.parts.isNotEmpty) {
       output.write('.${spec.parts.join('.')}');
     }
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitMissing(Missing spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitMissing(Missing spec, [String? context, int? params]) {
+    final output = StringBuffer();
     output.write('<missing>');
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitOtherAnyEventHandler(AnyEventHandler spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitOtherAnyEventHandler(AnyEventHandler spec,
+      [String? context, int? params]) {
+    final output = StringBuffer();
     output.write(spec);
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitOtherBlobNode(BlobNode spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitOtherBlobNode(BlobNode spec, [String? context, int? params]) {
+    final output = StringBuffer();
     output.write(spec);
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitOtherReference(Reference spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitOtherReference(Reference spec, [String? context, int? params]) {
+    final output = StringBuffer();
     output.write('$spec: ${spec.parts.join('.')}');
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitRemoteWidgetLibrary(RemoteWidgetLibrary spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitRemoteWidgetLibrary(RemoteWidgetLibrary spec,
+      [String? context, int? params]) {
+    final output = StringBuffer();
     for (var element in spec.imports) {
-      visitImport(element, output);
+      output.write(visitImport(element, context, params));
     }
 
     output.write('\n');
 
     for (var element in spec.widgets) {
-      visitWidgetDeclaration(element, output);
+      output.write(visitWidgetDeclaration(element, context, 0));
     }
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitSetStateHandler(SetStateHandler spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitSetStateHandler(SetStateHandler spec,
+      [String? context, int? params]) {
+    final output = StringBuffer();
     output.write('set ${spec.stateReference} = ${spec.value}');
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitStateReference(StateReference spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitStateReference(StateReference spec,
+      [String? context, int? params]) {
+    final output = StringBuffer();
     output.write('state.${spec.parts.join(".")}');
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitSwitch(Switch spec, [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitSwitch(Switch spec, [String? context, int? params]) {
+    final output = StringBuffer();
     output.write('switch ');
-    visitObject(spec.input, output);
+    output.write(visitObject(spec.input, context, params));
     output.write(' ');
-    visitDynamicMap(
+    output.write(visitDynamicMap(
         spec.outputs.map(
             (key, value) => MapEntry(key == null ? 'default' : '$key', value)),
-        output);
-    return output;
+        context,
+        params));
+    return output.toString();
   }
 
   @override
-  StringSink visitWidgetBuilderArgReference(WidgetBuilderArgReference spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitWidgetBuilderArgReference(WidgetBuilderArgReference spec,
+      [String? context, int? params]) {
+    final output = StringBuffer();
     output.write('${spec.argumentName}.${spec.parts.join('.')}');
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitWidgetBuilderDeclaration(WidgetBuilderDeclaration spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitWidgetBuilderDeclaration(WidgetBuilderDeclaration spec,
+      [String? context, int? params]) {
+    StringBuffer output = StringBuffer();
     output.write('(${spec.argumentName}) => ');
-    visitObject(spec.widget, output);
-    return output;
+    output.write(visitObject(spec.widget, context, params));
+    return output.toString();
   }
 
   @override
-  StringSink visitWidgetDeclaration(WidgetDeclaration spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
-    output.write('widget ${spec.name}');
+  String visitWidgetDeclaration(WidgetDeclaration spec,
+      [String? context, int? params]) {
+    StringBuffer output = StringBuffer();
+    // calculate for multiline
+    String ownSpace = 'widget ${spec.name}';
+
+    output.write(ownSpace);
+    ownSpace += ' = ';
     if (spec.initialState != null) {
       output.write(' ');
-      visitDynamicMap(spec.initialState!, output, params, false, true);
+      ownSpace += ' ';
+
+      String rootSpace = '';
+      if (spec.root is ConstructorCall) {
+        // hacky to get ConstructorCall name
+        rootSpace = '${(spec.root as ConstructorCall).name}(';
+      } else if (spec.root is Switch) {
+        // hacky to get Switch name, but input is not just like String?
+        rootSpace = 'switch ${(spec.root as Switch).input} {';
+      }
+
+      String initialState = visitDynamicMap(
+          spec.initialState!, context, ownSpace.length + rootSpace.length, false, true);
+
+      output.write(initialState);
+      if (initialState.contains('\n')) {
+        ownSpace = '} = ';
+      } else {
+        ownSpace += initialState;
+      }
     }
 
     output.write(' = ');
-    spec.root.accept(this, output);
+
+    output.write(visitObject(spec.root, context, ownSpace.length));
     output.write(';\n\n');
-    return output;
+    return output.toString();
   }
 
   @override
-  StringSink visitObject(Object? spec,
-      [StringSink? context, int? params]) {
-    final output = context ?? StringBuffer();
+  String visitObject(Object? spec, [String? context, int? params]) {
     if (spec is BlobNode) {
-      return spec.accept(this, output);
+      return spec.accept(this, context, params);
     } else if (spec is DynamicMap) {
-      return visitDynamicMap(spec, output);
+      return visitDynamicMap(spec, context, params);
     } else if (spec is DynamicList) {
-      return visitDynamicList(spec, output);
+      return visitDynamicList(spec, context, params);
     } else if (spec is String) {
-      return output..write('"$spec"');
+      return '"$spec"';
     } else {
       //int, double, bool, null
-      return output..write(spec);
+      return '$spec';
     }
   }
 

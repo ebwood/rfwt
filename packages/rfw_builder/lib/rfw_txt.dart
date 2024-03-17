@@ -12,10 +12,10 @@ String rwl2txt(RemoteWidgetLibrary library) =>
     library.accept(TxtVisitor()).toString();
 
 // Parse .rfwtxt format to .rfw format
-Uint8List txt2rfw(String txt) => encodeLibraryBlob(txt2rfl(txt));
+Uint8List txt2rfw(String txt) => encodeLibraryBlob(txt2rwl(txt));
 
 // Parse .rfwtxt to RemoteWidgetLibrary
-RemoteWidgetLibrary txt2rfl(String txt) => parseLibraryFile(txt);
+RemoteWidgetLibrary txt2rwl(String txt) => parseLibraryFile(txt);
 
 // Parse json to rfw data txt
 String json2dataTxt(Map<String, dynamic> map) => value2DataTxt(map).toString();

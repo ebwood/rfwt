@@ -15,7 +15,7 @@ DynamicMap rfw2json(Uint8List bytes) {
 DynamicMap rwl2json(RemoteWidgetLibrary library) =>
     library.accept(JsonVisitor()) as DynamicMap;
 
-extension DynamicMapEx on DynamicMap {
+extension DynamicMapExJson on DynamicMap {
   String pretty() {
     JsonEncoder encoder = JsonEncoder.withIndent('  ');
     return encoder.convert(this);
