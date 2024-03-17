@@ -4,7 +4,7 @@ homepage: https://github.com/ebwood/rfwt
 publish_to: none
 
 executables: 
-  change_version:
+  update_version:
 
 environment:
   sdk: ">=3.2.0"

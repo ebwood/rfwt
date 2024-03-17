@@ -1,6 +1,7 @@
 import 'package:rfw/formats.dart';
-import 'package:rfw_builder/rfw_builder.dart';
 import 'package:test/test.dart';
+
+import 'package:rfw_builder/rfw_builder.dart';
 
 void main() {
   test('TxtVisitor', () {

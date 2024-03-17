@@ -19,7 +19,7 @@ scripts:
     exec: dart test
   # use bin/change_version command to update every package version const variable in bin/version.dart if provided
   update_version:
-    exec: change_version
+    exec: update_version
 
 command:
   version:
