@@ -18,7 +18,7 @@ abstract class SpecVisitor<R, S> {
   R visitDynamicList(DynamicList spec, [R? context, S? params]);
 
   R visitDynamicMap(DynamicMap spec,
-      [R? context, bool withoutCurlyBraces = false, bool singleLine = false]);
+      [R? context, S? params, bool withoutCurlyBraces = false, bool singleLine = false]);
 
   R visitLibraryName(LibraryName spec, [R? context, S? params]);
 
@@ -113,7 +113,7 @@ mixin class DefaultSpecVisitor<R, S> implements SpecVisitor<R, S> {
 
   @override
   R visitDynamicMap(DynamicMap spec,
-      [R? context, bool withoutCurlyBraces = false, bool singleLine = false]) {
+      [R? context, S? params, bool withoutCurlyBraces = false, bool singleLine = false]) {
     // TODO: implement visitDynamicMap
     throw UnimplementedError();
   }

@@ -12,7 +12,8 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
   String get _leadingIndent => indent * _depth;
 
   @override
-  StringSink visitArgsReference(ArgsReference spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitArgsReference(ArgsReference spec,
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('args.${spec.parts.join(".")}');
     return output;
@@ -20,7 +21,7 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
 
   @override
   StringSink visitBoundArgsReference(BoundArgsReference spec,
-      [StringSink? context, int? parentSpace]) {
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('args(${spec.arguments}).${spec.parts.join(".")}');
     return output;
@@ -28,7 +29,7 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
 
   @override
   StringSink visitBoundLoopReference(BoundLoopReference spec,
-      [StringSink? context, int? parentSpace]) {
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('loop(${spec.value}).${spec.parts.join(".")}');
     return output;
@@ -36,32 +37,35 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
 
   @override
   StringSink visitBoundStateReference(BoundStateReference spec,
-      [StringSink? context, int? parentSpace]) {
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('state^${spec.depth}.${spec.parts.join(".")}');
     return output;
   }
 
   @override
-  StringSink visitConstructorCall(ConstructorCall spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitConstructorCall(ConstructorCall spec,
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('${spec.name}(');
     if (spec.arguments.isNotEmpty) {
-      visitDynamicMap(spec.arguments, output, true);
+      visitDynamicMap(spec.arguments, output, params, true);
     }
     output.write(')');
     return output;
   }
 
   @override
-  StringSink visitDataReference(DataReference spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitDataReference(DataReference spec,
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('data.${spec.parts.join(".")}');
     return output;
   }
 
   @override
-  StringSink visitDynamicList(DynamicList spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitDynamicList(DynamicList spec,
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('[');
     _depth++;
@@ -77,6 +81,7 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
   @override
   StringSink visitDynamicMap(DynamicMap spec,
       [StringSink? context,
+      int? params,
       bool withoutCurlyBraces = false,
       bool singleLine = false]) {
     final output = context ?? StringBuffer();
@@ -125,7 +130,8 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
   }
 
   @override
-  StringSink visitEventHandler(EventHandler spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitEventHandler(EventHandler spec,
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('event "${spec.eventName}" ');
     visitDynamicMap(spec.eventArguments, output);
@@ -134,7 +140,7 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
 
   @override
   StringSink visitFullyQualifiedWidgetName(FullyQualifiedWidgetName spec,
-      [StringSink? context, int? parentSpace]) {
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     visitLibraryName(spec.library, output);
     output.write(':${spec.widget}');
@@ -142,7 +148,7 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
   }
 
   @override
-  StringSink visitImport(Import spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitImport(Import spec, [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write("import ");
     visitLibraryName(spec.name, output);
@@ -151,7 +157,8 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
   }
 
   @override
-  StringSink visitLibraryName(LibraryName spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitLibraryName(LibraryName spec,
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write(spec.parts.join('.'));
     return output;
@@ -159,7 +166,7 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
 
   int _loopVariableLength = -1;
   @override
-  StringSink visitLoop(Loop spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitLoop(Loop spec, [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('\n');
     output.write(_leadingIndent);
@@ -176,7 +183,8 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
   }
 
   @override
-  StringSink visitLoopReference(LoopReference spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitLoopReference(LoopReference spec,
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('loop${spec.loop}');
     if (spec.parts.isNotEmpty) {
@@ -186,7 +194,8 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
   }
 
   @override
-  StringSink visitMissing(Missing spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitMissing(Missing spec,
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('<missing>');
     return output;
@@ -194,21 +203,23 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
 
   @override
   StringSink visitOtherAnyEventHandler(AnyEventHandler spec,
-      [StringSink? context, int? parentSpace]) {
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write(spec);
     return output;
   }
 
   @override
-  StringSink visitOtherBlobNode(BlobNode spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitOtherBlobNode(BlobNode spec,
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write(spec);
     return output;
   }
 
   @override
-  StringSink visitOtherReference(Reference spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitOtherReference(Reference spec,
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('$spec: ${spec.parts.join('.')}');
     return output;
@@ -216,7 +227,7 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
 
   @override
   StringSink visitRemoteWidgetLibrary(RemoteWidgetLibrary spec,
-      [StringSink? context, int? parentSpace]) {
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     for (var element in spec.imports) {
       visitImport(element, output);
@@ -231,21 +242,23 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
   }
 
   @override
-  StringSink visitSetStateHandler(SetStateHandler spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitSetStateHandler(SetStateHandler spec,
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('set ${spec.stateReference} = ${spec.value}');
     return output;
   }
 
   @override
-  StringSink visitStateReference(StateReference spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitStateReference(StateReference spec,
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('state.${spec.parts.join(".")}');
     return output;
   }
 
   @override
-  StringSink visitSwitch(Switch spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitSwitch(Switch spec, [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('switch ');
     visitObject(spec.input, output);
@@ -259,7 +272,7 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
 
   @override
   StringSink visitWidgetBuilderArgReference(WidgetBuilderArgReference spec,
-      [StringSink? context, int? parentSpace]) {
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('${spec.argumentName}.${spec.parts.join('.')}');
     return output;
@@ -267,7 +280,7 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
 
   @override
   StringSink visitWidgetBuilderDeclaration(WidgetBuilderDeclaration spec,
-      [StringSink? context, int? parentSpace]) {
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('(${spec.argumentName}) => ');
     visitObject(spec.widget, output);
@@ -276,12 +289,12 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
 
   @override
   StringSink visitWidgetDeclaration(WidgetDeclaration spec,
-      [StringSink? context, int? parentSpace]) {
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     output.write('widget ${spec.name}');
     if (spec.initialState != null) {
       output.write(' ');
-      visitDynamicMap(spec.initialState!, output, false, true);
+      visitDynamicMap(spec.initialState!, output, params, false, true);
     }
 
     output.write(' = ');
@@ -291,7 +304,8 @@ class TxtVisitor extends SpecVisitor<StringSink, int> {
   }
 
   @override
-  StringSink visitObject(Object? spec, [StringSink? context, int? parentSpace]) {
+  StringSink visitObject(Object? spec,
+      [StringSink? context, int? params]) {
     final output = context ?? StringBuffer();
     if (spec is BlobNode) {
       return spec.accept(this, output);

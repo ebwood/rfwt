@@ -114,7 +114,7 @@ class JsonVisitor extends SpecVisitor<dynamic, dynamic> {
 
   @override
   DynamicMap visitDynamicMap(DynamicMap spec,
-      [context, bool withoutCurlyBraces = false, bool singleLine = false]) {
+      [context, params, bool withoutCurlyBraces = false, bool singleLine = false]) {
     return spec.map((key, value) => MapEntry(key, visitObject(value)));
   }
 
