@@ -54,9 +54,9 @@ StringBuffer value2DataTxt(Object? value, [StringBuffer? buffer]) {
   return buffer;
 }
 
-class JsonVisitor extends SpecVisitor<dynamic> {
+class JsonVisitor extends SpecVisitor<dynamic, dynamic> {
   @override
-  DynamicMap visitArgsReference(ArgsReference spec, [context]) {
+  DynamicMap visitArgsReference(ArgsReference spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'parts': visitDynamicList(spec.parts),
@@ -64,7 +64,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitBoundArgsReference(BoundArgsReference spec, [context]) {
+  DynamicMap visitBoundArgsReference(BoundArgsReference spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'parts': visitDynamicList(spec.parts),
@@ -73,7 +73,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitBoundLoopReference(BoundLoopReference spec, [context]) {
+  DynamicMap visitBoundLoopReference(BoundLoopReference spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'value': visitObject(spec.value),
@@ -82,7 +82,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitBoundStateReference(BoundStateReference spec, [context]) {
+  DynamicMap visitBoundStateReference(BoundStateReference spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'depth': spec.depth,
@@ -91,7 +91,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitConstructorCall(ConstructorCall spec, [context]) {
+  DynamicMap visitConstructorCall(ConstructorCall spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'name': spec.name,
@@ -100,7 +100,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitDataReference(DataReference spec, [context]) {
+  DynamicMap visitDataReference(DataReference spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'parts': visitDynamicList(spec.parts)
@@ -108,7 +108,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicList visitDynamicList(DynamicList spec, [context]) {
+  DynamicList visitDynamicList(DynamicList spec, [context, params]) {
     return spec.map((e) => visitObject(e)).toList();
   }
 
@@ -119,7 +119,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitEventHandler(EventHandler spec, [context]) {
+  DynamicMap visitEventHandler(EventHandler spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'eventName': spec.eventName,
@@ -129,7 +129,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
 
   @override
   DynamicMap visitFullyQualifiedWidgetName(FullyQualifiedWidgetName spec,
-      [context]) {
+      [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'library': visitLibraryName(spec.library),
@@ -138,15 +138,15 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitImport(Import spec, [context]) =>
+  DynamicMap visitImport(Import spec, [context, params]) =>
       {'type': '${spec.runtimeType}', 'parts': visitLibraryName(spec.name)};
 
   @override
-  DynamicMap visitLibraryName(LibraryName spec, [context]) =>
+  DynamicMap visitLibraryName(LibraryName spec, [context, params]) =>
       {'type': '${spec.runtimeType}', 'parts': visitDynamicList(spec.parts)};
 
   @override
-  DynamicMap visitLoop(Loop spec, [context]) {
+  DynamicMap visitLoop(Loop spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'input': visitObject(spec.input),
@@ -155,7 +155,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitLoopReference(LoopReference spec, [context]) {
+  DynamicMap visitLoopReference(LoopReference spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'loop': spec.loop,
@@ -164,12 +164,12 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitMissing(Missing spec, [context]) {
+  DynamicMap visitMissing(Missing spec, [context, params]) {
     return {'type': '${spec.runtimeType}', 'value': spec.toString()};
   }
 
   @override
-  visitObject(Object? spec, [context]) {
+  visitObject(Object? spec, [context, params]) {
     if (spec is BlobNode) {
       return spec.accept(this);
     } else if (spec is DynamicList) {
@@ -184,7 +184,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitOtherAnyEventHandler(AnyEventHandler spec, [context]) {
+  DynamicMap visitOtherAnyEventHandler(AnyEventHandler spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'value': '$spec',
@@ -192,7 +192,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitOtherBlobNode(BlobNode spec, [context]) {
+  DynamicMap visitOtherBlobNode(BlobNode spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'value': '$spec',
@@ -200,7 +200,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitOtherReference(Reference spec, [context]) {
+  DynamicMap visitOtherReference(Reference spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'value': '$spec',
@@ -208,7 +208,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitRemoteWidgetLibrary(RemoteWidgetLibrary spec, [context]) {
+  DynamicMap visitRemoteWidgetLibrary(RemoteWidgetLibrary spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'imports': spec.imports.map((e) => visitImport(e)).toList(),
@@ -217,7 +217,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitSetStateHandler(SetStateHandler spec, [context]) {
+  DynamicMap visitSetStateHandler(SetStateHandler spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'stateReference': spec.stateReference.accept(this),
@@ -226,7 +226,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitStateReference(StateReference spec, [context]) {
+  DynamicMap visitStateReference(StateReference spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'parts': visitDynamicList(spec.parts)
@@ -234,7 +234,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitSwitch(Switch spec, [context]) {
+  DynamicMap visitSwitch(Switch spec, [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'input': visitObject(spec.input),
@@ -245,7 +245,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
 
   @override
   DynamicMap visitWidgetBuilderArgReference(WidgetBuilderArgReference spec,
-      [context]) {
+      [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'arguments': spec.argumentName,
@@ -255,7 +255,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
 
   @override
   DynamicMap visitWidgetBuilderDeclaration(WidgetBuilderDeclaration spec,
-      [context]) {
+      [context, params]) {
     return {
       'type': '${spec.runtimeType}',
       'argumentName': spec.argumentName,
@@ -264,7 +264,7 @@ class JsonVisitor extends SpecVisitor<dynamic> {
   }
 
   @override
-  DynamicMap visitWidgetDeclaration(WidgetDeclaration spec, [context]) {
+  DynamicMap visitWidgetDeclaration(WidgetDeclaration spec, [context, params]) {
     return {
       'name': spec.name,
       'type': '${spec.runtimeType}',

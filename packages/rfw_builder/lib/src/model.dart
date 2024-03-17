@@ -3,64 +3,64 @@ import 'package:rfw/formats.dart';
 import 'base.dart';
 
 extension BlobNodeEx on BlobNode {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
     switch (this) {
       case Missing():
-        return visitor.visitMissing(this as Missing, context);
+        return visitor.visitMissing(this as Missing, context, params);
       case Loop():
-        return visitor.visitLoop(this as Loop, context);
+        return visitor.visitLoop(this as Loop, context, params);
       case Switch():
-        return visitor.visitSwitch(this as Switch, context);
+        return visitor.visitSwitch(this as Switch, context, params);
       case ConstructorCall():
-        return visitor.visitConstructorCall(this as ConstructorCall, context);
+        return visitor.visitConstructorCall(this as ConstructorCall, context, params);
       case WidgetBuilderDeclaration():
         return visitor.visitWidgetBuilderDeclaration(
-            this as WidgetBuilderDeclaration, context);
+            this as WidgetBuilderDeclaration, context, params);
       case Reference():
         switch (this) {
           case ArgsReference():
-            return visitor.visitArgsReference(this as ArgsReference, context);
+            return visitor.visitArgsReference(this as ArgsReference, context, params);
           case BoundArgsReference():
             return visitor.visitBoundArgsReference(
-                this as BoundArgsReference, context);
+                this as BoundArgsReference, context, params);
           case DataReference():
-            return visitor.visitDataReference(this as DataReference, context);
+            return visitor.visitDataReference(this as DataReference, context, params);
           case WidgetBuilderArgReference():
             return visitor.visitWidgetBuilderArgReference(
-                this as WidgetBuilderArgReference, context);
+                this as WidgetBuilderArgReference, context, params);
           case LoopReference():
-            return visitor.visitLoopReference(this as LoopReference, context);
+            return visitor.visitLoopReference(this as LoopReference, context, params);
           case BoundLoopReference():
             return visitor.visitBoundLoopReference(
-                this as BoundLoopReference, context);
+                this as BoundLoopReference, context, params);
           case StateReference():
-            return visitor.visitStateReference(this as StateReference, context);
+            return visitor.visitStateReference(this as StateReference, context, params);
           case BoundStateReference():
             return visitor.visitBoundStateReference(
-                this as BoundStateReference, context);
+                this as BoundStateReference, context, params);
           default:
             // other custom reference
-            return visitor.visitOtherReference(this as Reference, context);
+            return visitor.visitOtherReference(this as Reference, context, params);
         }
       case AnyEventHandler():
         switch (this) {
           case EventHandler():
-            return visitor.visitEventHandler(this as EventHandler, context);
+            return visitor.visitEventHandler(this as EventHandler, context, params);
           case SetStateHandler():
             return visitor.visitSetStateHandler(
-                this as SetStateHandler, context);
+                this as SetStateHandler, context, params);
           default:
             // other custom event handler
             return visitor.visitOtherAnyEventHandler(
-                this as AnyEventHandler, context);
+                this as AnyEventHandler, context, params);
         }
       case Import():
-        return visitor.visitImport(this as Import, context);
+        return visitor.visitImport(this as Import, context, params);
       case WidgetDeclaration():
         return visitor.visitWidgetDeclaration(
-            this as WidgetDeclaration, context);
+            this as WidgetDeclaration, context, params);
       default:
-        return visitor.visitOtherBlobNode(this, context);
+        return visitor.visitOtherBlobNode(this, context, params);
     }
   }
 }
@@ -72,14 +72,14 @@ class $LibraryName extends LibraryName implements Spec {
       (LibraryNameBuilder()..update(updates)).build();
 
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitLibraryName(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitLibraryName(this, context, params);
   }
 }
 
 extension LibraryNameExtension on LibraryName {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitLibraryName(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitLibraryName(this, context, params);
   }
 }
 
@@ -107,14 +107,14 @@ class $FullyQualifiedWidgetName extends FullyQualifiedWidgetName
       (FullyQualifiedWidgetNameBuilder()..update(updates)).build();
 
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitFullyQualifiedWidgetName(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitFullyQualifiedWidgetName(this, context, params);
   }
 }
 
 extension FullyQualifiedWidgetNameExtension on FullyQualifiedWidgetName {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitFullyQualifiedWidgetName(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitFullyQualifiedWidgetName(this, context, params);
   }
 }
 
@@ -137,8 +137,8 @@ class FullyQualifiedWidgetNameBuilder
 
 /// Missing
 extension MissingEx on Missing {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitMissing(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitMissing(this, context, params);
   }
 }
 
@@ -149,14 +149,14 @@ class $Loop extends Loop implements Spec {
       (LoopBuilder()..update(updates)).build();
 
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitLoop(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitLoop(this, context, params);
   }
 }
 
 extension LoopExtension on Loop {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitLoop(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitLoop(this, context, params);
   }
 }
 
@@ -182,14 +182,14 @@ class $Switch extends Switch implements Spec {
       (SwitchBuilder()..update(updates)).build();
 
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitSwitch(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitSwitch(this, context, params);
   }
 }
 
 extension SwitchExtension on Switch {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitSwitch(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitSwitch(this, context, params);
   }
 }
 
@@ -215,14 +215,14 @@ class $ConstructorCall extends ConstructorCall implements Spec {
       (ConstructorCallBuilder()..update(updates)).build();
 
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitConstructorCall(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitConstructorCall(this, context, params);
   }
 }
 
 extension ConstructorCallExtension on ConstructorCall {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitConstructorCall(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitConstructorCall(this, context, params);
   }
 }
 
@@ -250,14 +250,14 @@ class $WidgetBuilderDeclaration extends WidgetBuilderDeclaration
           [void Function(WidgetBuilderDeclarationBuilder)? updates]) =>
       (WidgetBuilderDeclarationBuilder()..update(updates)).build();
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitWidgetBuilderDeclaration(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitWidgetBuilderDeclaration(this, context, params);
   }
 }
 
 extension WidgetBuilderDeclarationExtension on WidgetBuilderDeclaration {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitWidgetBuilderDeclaration(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitWidgetBuilderDeclaration(this, context, params);
   }
 }
 
@@ -284,14 +284,14 @@ class $ArgsReference extends ArgsReference implements Spec {
   factory $ArgsReference([void Function(ArgsReferenceBuilder)? updates]) =>
       (ArgsReferenceBuilder()..update(updates)).build();
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitArgsReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitArgsReference(this, context, params);
   }
 }
 
 extension ArgsReferenceExtension on ArgsReference {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitArgsReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitArgsReference(this, context, params);
   }
 }
 
@@ -316,14 +316,14 @@ class $BoundArgsReference extends BoundArgsReference implements Spec {
           [void Function(BoundArgsReferenceBuilder)? updates]) =>
       (BoundArgsReferenceBuilder()..update(updates)).build();
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitBoundArgsReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitBoundArgsReference(this, context, params);
   }
 }
 
 extension BoundArgsReferenceExtension on BoundArgsReference {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitBoundArgsReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitBoundArgsReference(this, context, params);
   }
 }
 
@@ -348,14 +348,14 @@ class $DataReference extends DataReference implements Spec {
   factory $DataReference([void Function(DataReferenceBuilder)? updates]) =>
       (DataReferenceBuilder()..update(updates)).build();
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitDataReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitDataReference(this, context, params);
   }
 }
 
 extension DataReferenceExtension on DataReference {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitDataReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitDataReference(this, context, params);
   }
 }
 
@@ -381,14 +381,14 @@ class $WidgetBuilderArgReference extends WidgetBuilderArgReference
           [void Function(WidgetBuilderArgReferenceBuilder)? updates]) =>
       (WidgetBuilderArgReferenceBuilder()..update(updates)).build();
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitWidgetBuilderArgReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitWidgetBuilderArgReference(this, context, params);
   }
 }
 
 extension WidgetBuilderArgReferenceExtension on WidgetBuilderArgReference {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitWidgetBuilderArgReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitWidgetBuilderArgReference(this, context, params);
   }
 }
 
@@ -414,14 +414,14 @@ class $LoopReference extends LoopReference implements Spec {
   factory $LoopReference([void Function(LoopReferenceBuilder)? updates]) =>
       (LoopReferenceBuilder()..update(updates)).build();
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitLoopReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitLoopReference(this, context, params);
   }
 }
 
 extension LoopReferenceExtension on LoopReference {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitLoopReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitLoopReference(this, context, params);
   }
 }
 
@@ -447,14 +447,14 @@ class $BoundLoopReference extends BoundLoopReference implements Spec {
           [void Function(BoundLoopReferenceBuilder)? updates]) =>
       (BoundLoopReferenceBuilder()..update(updates)).build();
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitBoundLoopReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitBoundLoopReference(this, context, params);
   }
 }
 
 extension BoundLoopReferenceExtension on BoundLoopReference {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitBoundLoopReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitBoundLoopReference(this, context, params);
   }
 }
 
@@ -480,14 +480,14 @@ class $StateReference extends StateReference implements Spec {
       (StateReferenceBuilder()..update(updates)).build();
 
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitStateReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitStateReference(this, context, params);
   }
 }
 
 extension StateReferenceExtension on StateReference {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitStateReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitStateReference(this, context, params);
   }
 }
 
@@ -513,14 +513,14 @@ class $BoundStateReference extends BoundStateReference implements Spec {
       (BoundStateReferenceBuilder()..update(updates)).build();
 
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitBoundStateReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitBoundStateReference(this, context, params);
   }
 }
 
 extension BoundStateReferenceExtension on BoundStateReference {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitBoundStateReference(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitBoundStateReference(this, context, params);
   }
 }
 
@@ -540,8 +540,8 @@ class BoundStateReferenceBuilder implements Builder<BoundStateReference> {
 }
 
 extension EventHandlerExtension on EventHandler {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitEventHandler(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitEventHandler(this, context, params);
   }
 }
 
@@ -552,8 +552,8 @@ class $EventHandler extends EventHandler implements Spec {
       (EventHandlerBuilder()..update(updates)).build();
 
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitEventHandler(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitEventHandler(this, context, params);
   }
 }
 
@@ -579,14 +579,14 @@ class $SetStateHandler extends SetStateHandler implements Spec {
       (SetStateHandlerBuilder()..update(updates)).build();
 
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitSetStateHandler(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitSetStateHandler(this, context, params);
   }
 }
 
 extension SetStateHandlerExt on SetStateHandler {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitSetStateHandler(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitSetStateHandler(this, context, params);
   }
 }
 
@@ -612,14 +612,14 @@ class $Import extends Import implements Spec {
       (ImportBuilder()..update(updates)).build();
 
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitImport(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitImport(this, context, params);
   }
 }
 
 extension ImportExt on Import {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitImport(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitImport(this, context, params);
   }
 }
 
@@ -646,14 +646,14 @@ class $WidgetDeclaration extends WidgetDeclaration implements Spec {
       (WidgetDeclarationBuilder()..update(updates)).build();
 
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitWidgetDeclaration(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitWidgetDeclaration(this, context, params);
   }
 }
 
 extension WidgetDeclarationExt on WidgetDeclaration {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitWidgetDeclaration(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitWidgetDeclaration(this, context, params);
   }
 }
 
@@ -683,14 +683,14 @@ class $RemoteWidgetLibrary extends RemoteWidgetLibrary implements Spec {
       (RemoteWidgetLibraryBuilder()..update(updates)).build();
 
   @override
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitRemoteWidgetLibrary(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitRemoteWidgetLibrary(this, context, params);
   }
 }
 
 extension RemoteWidgetLibraryExt on RemoteWidgetLibrary {
-  R accept<R>(SpecVisitor<R> visitor, [R? context]) {
-    return visitor.visitRemoteWidgetLibrary(this, context);
+  R accept<R, S>(SpecVisitor<R, S> visitor, [R? context, S? params]) {
+    return visitor.visitRemoteWidgetLibrary(this, context, params);
   }
 }
 
